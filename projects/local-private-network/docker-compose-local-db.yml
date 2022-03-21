@@ -23,7 +23,8 @@ services:
 
   ipld-eth-db:
     restart: always
-    image: vulcanize/ipld-eth-db:v3.0.6
+    build:
+      context: ../../../ipld-eth-db/
     environment:
       POSTGRES_USER: "vdbm"
       POSTGRES_DB: "vulcanize_testing"

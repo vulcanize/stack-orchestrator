@@ -42,12 +42,21 @@ The purpose of this project is as follows:
 
 If you want to test your local geth code, do the following:
 
-1. cd `foundry/projects/local-private-network`.
-2. `./wrapper.sh` - This script will do all the heavy lifting for you.
+1. cd `projects/local-private-network`.
+2. `./wrapper.sh` - This script will do all the heavy lifting for you. Run the flag with -h to see all the options it provides.
 3. Keep an eye out for the outputs from the docker container.
 4. Enter the docker container and do as you please.
-5. If you want to change your geth code, you will have to run `./wrapper.sh` for subsequent runs.
-6. If you do not change your geth code, you have to run: `docker-compose up --build`.
+
+### Custom Docker Compose
+
+You will also notice that there are multiple docker compose files.
+
+1. `docker-compose.yml` - This pulls a published container.
+2. `docker-compose-local-db.yml` - This will build the database image from the local repository, allowing you to test any changes.
+
+```
+docker-compose -f docker-compose-local-db.yml up --build --abort-on-container-exit
+```
 
 ### Key Notes:
 
@@ -57,3 +66,4 @@ If you want to test your local geth code, do the following:
 - The `foundry/projects/local-private-network/deploy-local-network.sh` file does most heavy lifting. It spins up geth and triggers various events.
 - The `foundry/projects/local-private-network/start-private-network.sh` file triggers `deploy-local-network.sh`. This file runs all the tests.
 - The `geth` node will stay running even after the tests are terminated.
+- If you are building the database locally and make change to the schema, you will have to remove the volume: `docker-compose down -v local-private-network_vdb_db_eth_server`.
