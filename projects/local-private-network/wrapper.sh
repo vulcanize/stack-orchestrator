@@ -51,8 +51,13 @@ RED='\033[0;31m'
 NC='\033[0m'
 # Local Build or Docker Build
 
+echo -e "${GREEN} STARTING PARAMS${NC}"
+echo -e "${GREEN} e=${e} ${NC}"
+echo -e "${GREEN} d=${d} ${NC}"
+echo -e "${GREEN} v=${v} ${NC}"
+
 if [ "$e" != "skip" ]; then
-    ./compile-geth.sh $e
+    ./compile-geth.sh -e $e
 fi
 
 if [[ "$v" = "keep" ]] ; then
