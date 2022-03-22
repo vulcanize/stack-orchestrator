@@ -10,15 +10,14 @@ Spin up Foundry with Geth and a database.
 
 -h,         Display help
 
--e,         Should we compile geth on your "local" machine or in "docker" or "skip" compiling. Recommended to use "docker" for releases
-            and "local" when testing.
+-e,         Should we compile geth on your "local" machine or in "docker" or on a "remote" machine or "skip" compiling. Recommended to use "docker" for releases
 
 -d,         Should we build a "local" ipdl-eth-db image or use the "remote" one. Use "local" if you have made change to the DB.
 
 -v,         Should we "remove" the volume when bringind the image down or "keep" it?
 
 EOF
-exit 0
+exit 1
 # EOF is found above and hence cat command stops reading. This is equivalent to echo but much neater when printing out.
 }
 
@@ -29,7 +28,7 @@ while getopts ":e:d:v:" o; do
     case "${o}" in
         e)
             e=${OPTARG}
-            [ "$e" = "local" -o "$e" = "docker" -o "$e" = "skip" ] || showHelp
+            [ "$e" = "local" -o "$e" = "docker" -o "$e" = "skip" -o "$e" = "remote" ] || showHelp
             ;;
         d)
             d=${OPTARG}

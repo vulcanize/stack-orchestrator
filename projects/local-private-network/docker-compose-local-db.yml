@@ -26,9 +26,9 @@ services:
     build:
       context: ../../../ipld-eth-db/
     environment:
-      POSTGRES_USER: "vdbm"
-      POSTGRES_DB: "vulcanize_testing"
-      POSTGRES_PASSWORD: "password"
+      POSTGRES_USER: vdbm
+      POSTGRES_DB: vulcanize_testing
+      POSTGRES_PASSWORD: password
     volumes:
       - vdb_db_eth_server:/var/lib/postgresql/data
     ports:

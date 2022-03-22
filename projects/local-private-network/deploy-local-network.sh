@@ -152,6 +152,19 @@ set +m
 #   --ws --ws.addr="0.0.0.0" --unlock="$(IFS=,; echo "${address[*]}")" --password=<(exit) &
 
 echo "Starting Geth with following flags"
+echo \
+  2> >(tee "$chaindir/geth.log" | grep --line-buffered Success | sed 's/^/geth: /' >&2) \
+  --datadir "$chaindir" --networkid "$CHAINID" --port="$port" \
+  --mine --miner.threads=1 --allow-insecure-unlock \
+  --http --http.api "admin,debug,eth,miner,net,personal,txpool,web3,statediff" --http.corsdomain '*' --http.vhosts '*' --nodiscover \
+  --http.addr="$RPC_ADDRESS" --http.port="$RPC_PORT" --syncmode=full --gcmode=archive \
+  --statediff --statediff.db.host="$DB_HOST" --statediff.db.port="$DB_PORT" --statediff.db.user="$DB_USER" \
+  --statediff.db.password="$DB_PASSWORD" --statediff.db.name="$DB_NAME" \
+  --statediff.db.nodeid 1 --statediff.db.clientname test1 --statediff.writing="$DB_WRITE" \
+  --statediff.db.type="$DB_TYPE" --statediff.db.driver="$DB_DRIVER" \
+  --ws --ws.addr="0.0.0.0" --ws.origins '*' --ws.api=admin,debug,eth,miner,net,personal,txpool,web3 \
+  --nat=none --miner.gasprice 16000000000 --nat=none \
+  --unlock="$(IFS=,; echo "${address[*]}")" --password=<(exit) &
 geth \
   2> >(tee "$chaindir/geth.log" | grep --line-buffered Success | sed 's/^/geth: /' >&2) \
   --datadir "$chaindir" --networkid "$CHAINID" --port="$port" \
