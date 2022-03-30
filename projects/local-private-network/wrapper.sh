@@ -16,6 +16,10 @@ Spin up Foundry with Geth and a database.
 
 -v,         Should we "remove" the volume when bringind the image down or "keep" it?
 
+-u,         What username should we use for the remote build?
+
+-n,         What is the hostname for the remote build?
+
 EOF
 exit 1
 # EOF is found above and hence cat command stops reading. This is equivalent to echo but much neater when printing out.
@@ -24,7 +28,9 @@ exit 1
 e="local"
 d="docker"
 v="keep"
-while getopts ":e:d:v:" o; do
+u="abdul"
+n="alabaster.lan.vdb.to"
+while getopts ":e:d:v:u:n:" o; do
     case "${o}" in
         e)
             e=${OPTARG}
@@ -37,6 +43,12 @@ while getopts ":e:d:v:" o; do
         v)
             v=${OPTARG}
             [ "$v" = "keep" -o "$v" = "remove" ] || showHelp
+            ;;
+        u)
+            u=${OPTARG}
+            ;;
+        n)
+            n=${OPTARG}
             ;;
         *)
             showHelp
@@ -54,9 +66,11 @@ echo -e "${GREEN} STARTING PARAMS${NC}"
 echo -e "${GREEN} e=${e} ${NC}"
 echo -e "${GREEN} d=${d} ${NC}"
 echo -e "${GREEN} v=${v} ${NC}"
+echo -e "${GREEN} u=${u} ${NC}"
+echo -e "${GREEN} n=${n} ${NC}"
 
 if [ "$e" != "skip" ]; then
-    ./compile-geth.sh -e $e
+    ./compile-geth.sh -e $e -n $n -u $u
 fi
 
 if [[ "$v" = "keep" ]] ; then

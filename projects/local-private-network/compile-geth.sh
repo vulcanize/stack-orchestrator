@@ -11,16 +11,28 @@ Spin up Foundry with Geth and a database.
 
 -e,         Should we compile on your "local" machine or in "docker" or on a "remote" server
 
+-v,         Should we "remove" the volume when bringind the image down or "keep" it?
+
+-u,         What username should we use for the remote build?
+
 EOF
 exit 1
 # EOF is found above and hence cat command stops reading. This is equivalent to echo but much neater when printing out.
 }
 
-while getopts ":e:" o; do
+u="abdul"
+n="alabaster.lan.vdb.to"
+while getopts ":e:u:n:" o; do
     case "${o}" in
         e)
             e=${OPTARG}
             [ "$e" = "local" -o "$e" = "docker" -o "$e" = "remote" ] || showHelp
+            ;;
+        u)
+            u=${OPTARG}
+            ;;
+        n)
+            n=${OPTARG}
             ;;
         *)
             showHelp
@@ -40,6 +52,8 @@ trap "cd ${start_path}" SIGINT SIGTERM
 cd ../../../../
 echo -e "${GREEN}Building geth!${NC}"
 echo -e "${GREEN}e=${e}${NC}"
+echo -e "${GREEN}n=${n}${NC}"
+echo -e "${GREEN}u=${u}${NC}"
 
 if [[ "$e" = "local" ]] ; then
     echo -e "${GREEN}Building geth locally!${NC}"
@@ -58,11 +72,12 @@ if [[ "$e" = "docker" ]] ; then
 fi
 
 if [[ "$e" == "remote" ]]; then
-    echo -e "${GREEN}Building geth remotely on alabaster.lan.vdb.to${NC}"
-    rm related-repositories/foundry-test/projects/local-private-network/geth-linux-amd64
-    rsync -uavz ./ abdul@alabaster.lan.vdb.to:/home/abdul/go-ethereum-cerc
-    ssh abdul@alabaster.lan.vdb.to "cd /home/abdul/go-ethereum-cerc/ ; make geth ; chmod +x build/bin/geth"
-    scp abdul@alabaster.lan.vdb.to:/home/abdul/go-ethereum-cerc/build/bin/geth related-repositories/foundry-test/projects/local-private-network/geth-linux-amd64
+    echo -e "${GREEN}Building geth remotely on $n ${NC}"
+    [ -e related-repositories/foundry-test/projects/local-private-network/geth-linux-amd64 ] && \
+        rm related-repositories/foundry-test/projects/local-private-network/geth-linux-amd64
+    rsync -uavz ./ ${u}@${n}:/home/${u}/go-ethereum-cerc
+    ssh ${u}@${n} "cd /home/${u}/go-ethereum-cerc/ ; make geth ; chmod +x build/bin/geth"
+    scp ${u}@${n}:/home/${u}/go-ethereum-cerc/build/bin/geth related-repositories/foundry-test/projects/local-private-network/geth-linux-amd64
 
 fi
 

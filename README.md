@@ -43,7 +43,7 @@ The purpose of this project is as follows:
 If you want to test your local geth code, do the following:
 
 1. cd `projects/local-private-network`.
-2. `./wrapper.sh` - This script will do all the heavy lifting for you. Run the flag with -h to see all the options it provides.
+2. `./wrapper.sh` - This script will do all the heavy lifting for you. Run the flag with -h to see all the options it provides. Example Run command: `./wrapper.sh -e remote -d local -v remove -u abdul -n alabaster.lan.vdb.to`
 3. Keep an eye out for the outputs from the docker container.
 4. Enter the docker container and do as you please.
 

@@ -71,11 +71,13 @@ done
 
 mkdir -p "$gethdir/config/"
 
+# Set a password
 if [[ ! -f "$gethdir/config/password" ]]
 then
   echo "password" > "$gethdir/config/password"
 fi
 
+# Create a genesis file if there is no existing chain.
 if [[ ! -f "$gethdir/config/genesis.json" ]]
 then
   if [[ "$USE_GENESIS" != "true" ]]
@@ -200,11 +202,9 @@ echo "Curling: $ETH_RPC_URL"
 until curl -s "$ETH_RPC_URL"; do sleep 1; done
 
 echo "Curling: $ETH_RPC_URL complete"
-# UPDATE
-#ETH_FROM=$(seth --rpc-url="$ETH_RPC_URL" rpc eth_coinbase)
-#export ETH_FROM
 export ETH_KEYSTORE=$gethdir/keystore
 export ETH_PASSWORD=$gethdir/config/password
+
 printf 'testnet:  Account: %s (default)\n' "${address[0]}" >&2
 
 [[ "${#address[@]}" -gt 1 ]] && printf 'testnet:   Account: %s\n' "${address[@]:1}" >&2

@@ -6,6 +6,7 @@ services:
     depends_on:
       - ipld-eth-db
     build: ./
+    privileged: true
     environment:
       DB_USER: vdbm
       DB_NAME: vulcanize_testing
