@@ -17,6 +17,7 @@ services:
       DB_DRIVER: sqlx
       DB_WAIT_FOR_SYNC: "true"
       CHAIN_ID: "99"
+      USE_GENESIS: "true"
     ports:
       - "127.0.0.1:8545:8545"
       - "127.0.0.1:8546:8546"

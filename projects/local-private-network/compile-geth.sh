@@ -59,6 +59,7 @@ fi
 
 if [[ "$e" == "remote" ]]; then
     echo -e "${GREEN}Building geth remotely on alabaster.lan.vdb.to${NC}"
+    rm related-repositories/foundry-test/projects/local-private-network/geth-linux-amd64
     rsync -uavz ./ abdul@alabaster.lan.vdb.to:/home/abdul/go-ethereum-cerc
     ssh abdul@alabaster.lan.vdb.to "cd /home/abdul/go-ethereum-cerc/ ; make geth ; chmod +x build/bin/geth"
     scp abdul@alabaster.lan.vdb.to:/home/abdul/go-ethereum-cerc/build/bin/geth related-repositories/foundry-test/projects/local-private-network/geth-linux-amd64

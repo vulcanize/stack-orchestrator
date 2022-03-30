@@ -60,10 +60,13 @@ docker-compose -f docker-compose-local-db.yml up --build --abort-on-container-ex
 
 ### Key Notes:
 
-- The command to [deploy](https://onbjerg.github.io/foundry-book/forge/deploying.html) the smart contract is: `forge create --keystore $ETH_KEYSTORE_FILE --rpc-url [http://127.0.0.1:8545](http://127.0.0.1:8545/) --constructor-args 1 --password "" --legacy /root/stateful/src/Stateful.sol:Stateful`
-- The command to interact create a [transaction](https://onbjerg.github.io/foundry-book/reference/cast.html) is: `cast send --keystore $ETH_KEYSTORE_FILE --rpc-url [http://127.0.0.1:8545](http://127.0.0.1:8545/) --password "" --legacy $DEPLOYED_ADDRESS "off()"`
+- The command to [deploy](https://onbjerg.github.io/foundry-book/forge/deploying.html) the smart contract is: `forge create --keystore $(cat ~/transaction_info/CURRENT_ETH_KEYSTORE_FILE) --rpc-url http://127.0.0.1:8545 --constructor-args 1 --password $(cat ${ETHDIR}/config/password) --legacy /root/stateful/src/Stateful.sol:Stateful`
+- The command to create a [transaction](https://onbjerg.github.io/foundry-book/reference/cast.html) (which will create a new block) is: `cast send --keystore $(cat ~/transaction_info/CURRENT_ETH_KEYSTORE_FILE) --rpc-url http://127.0.0.1:8545 --password $(cat $(cat ~/transaction_info/ETHDIR)) --legacy $(cat ~/transaction_info/STATEFUL_TEST_DEPLOYED_ADDRESS) "inc()"`
+- To manually send a transaction (which will trigger the mining of a new block), simply run the following script: `~/transaction_info/NEW_TRANSACTION`.
+  - This script is only populated after the `start-private-network.sh` script has completed successfully.
 - The `Dockerfile` compiles `cast` and `forge`.
 - The `foundry/projects/local-private-network/deploy-local-network.sh` file does most heavy lifting. It spins up geth and triggers various events.
 - The `foundry/projects/local-private-network/start-private-network.sh` file triggers `deploy-local-network.sh`. This file runs all the tests.
 - The `geth` node will stay running even after the tests are terminated.
 - If you are building the database locally and make change to the schema, you will have to remove the volume: `docker-compose down -v local-private-network_vdb_db_eth_server`.
+- If you wish to use a local `genesis.json` file, do not add the `alloc` or `extra_data` block. The start up script will do it for you.
