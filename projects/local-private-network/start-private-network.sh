@@ -49,7 +49,7 @@ echo $DEPLOYED_ADDRESS > ~/transaction_info/STATEFUL_TEST_DEPLOYED_ADDRESS
 
 #TX_OUT=$(cast send --keystore $ETH_KEYSTORE_FILE --rpc-url http://127.0.0.1:8545 --password "" --legacy $DEPLOYED_ADDRESS "off()")
 TX_OUT=$(cast send --keystore $(cat ~/transaction_info/CURRENT_ETH_KEYSTORE_FILE) --rpc-url http://127.0.0.1:8545 --password $(cat $(cat ~/transaction_info/ETHDIR)/config/password) --legacy $(cat ~/transaction_info/STATEFUL_TEST_DEPLOYED_ADDRESS) "inc()")
-echo 'cast send --keystore $(cat ~/transaction_info/CURRENT_ETH_KEYSTORE_FILE) --rpc-url http://127.0.0.1:8545 --password $(cat $(cat ~/transaction_info/ETHDIR)}/config/password) --legacy $(cat ~/transaction_info/STATEFUL_TEST_DEPLOYED_ADDRESS) "inc()" ' > ~/transaction_info/NEW_TRANSACTION
+echo 'cast send --keystore $(cat ~/transaction_info/CURRENT_ETH_KEYSTORE_FILE) --rpc-url http://127.0.0.1:8545 --password $(cat $(cat ~/transaction_info/ETHDIR)/config/password) --legacy $(cat ~/transaction_info/STATEFUL_TEST_DEPLOYED_ADDRESS) "inc()" ' > ~/transaction_info/NEW_TRANSACTION
 # Simply run the command below whenever you want to call the smart contract and create a new block
 chmod +x ~/transaction_info/NEW_TRANSACTION
 
