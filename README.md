@@ -42,18 +42,32 @@ The purpose of this project is as follows:
 
 If you want to test your local geth code, do the following:
 
-1. cd `foundry/projects/local-private-network`.
-2. `./wrapper.sh` - This script will do all the heavy lifting for you.
+1. cd `projects/local-private-network`.
+2. `./wrapper.sh` - This script will do all the heavy lifting for you. Run the flag with -h to see all the options it provides. Example Run command: `./wrapper.sh -e remote -d local -v remove -u abdul -n alabaster.lan.vdb.to`
 3. Keep an eye out for the outputs from the docker container.
 4. Enter the docker container and do as you please.
-5. If you want to change your geth code, you will have to run `./wrapper.sh` for subsequent runs.
-6. If you do not change your geth code, you have to run: `docker-compose up --build`.
+
+### Custom Docker Compose
+
+You will also notice that there are multiple docker compose files.
+
+1. `docker-compose.yml` - This pulls a published container.
+2. `docker-compose-local-db.yml` - This will build the database image from the local repository, allowing you to test any changes.
+
+```
+docker-compose -f docker-compose-local-db.yml up --build --abort-on-container-exit
+```
 
 ### Key Notes:
 
-- The command to [deploy](https://onbjerg.github.io/foundry-book/forge/deploying.html) the smart contract is: `forge create --keystore $ETH_KEYSTORE_FILE --rpc-url [http://127.0.0.1:8545](http://127.0.0.1:8545/) --constructor-args 1 --password "" --legacy /root/stateful/src/Stateful.sol:Stateful`
-- The command to interact create a [transaction](https://onbjerg.github.io/foundry-book/reference/cast.html) is: `cast send --keystore $ETH_KEYSTORE_FILE --rpc-url [http://127.0.0.1:8545](http://127.0.0.1:8545/) --password "" --legacy $DEPLOYED_ADDRESS "off()"`
+- If you want to build `geth` remotely, talk to Shane to create a user on `alabaster`, (or any other server you want really).
+- The command to [deploy](https://onbjerg.github.io/foundry-book/forge/deploying.html) the smart contract is: `forge create --keystore $(cat ~/transaction_info/CURRENT_ETH_KEYSTORE_FILE) --rpc-url http://127.0.0.1:8545 --constructor-args 1 --password $(cat ${ETHDIR}/config/password) --legacy /root/stateful/src/Stateful.sol:Stateful`
+- The command to create a [transaction](https://onbjerg.github.io/foundry-book/reference/cast.html) (which will create a new block) is: `cast send --keystore $(cat ~/transaction_info/CURRENT_ETH_KEYSTORE_FILE) --rpc-url http://127.0.0.1:8545 --password $(cat $(cat ~/transaction_info/ETHDIR)) --legacy $(cat ~/transaction_info/STATEFUL_TEST_DEPLOYED_ADDRESS) "inc()"`
+- To manually send a transaction (which will trigger the mining of a new block), simply run the following script: `~/transaction_info/NEW_TRANSACTION`.
+  - This script is only populated after the `start-private-network.sh` script has completed successfully.
 - The `Dockerfile` compiles `cast` and `forge`.
 - The `foundry/projects/local-private-network/deploy-local-network.sh` file does most heavy lifting. It spins up geth and triggers various events.
 - The `foundry/projects/local-private-network/start-private-network.sh` file triggers `deploy-local-network.sh`. This file runs all the tests.
 - The `geth` node will stay running even after the tests are terminated.
+- If you are building the database locally and make change to the schema, you will have to remove the volume: `docker-compose down -v local-private-network_vdb_db_eth_server`.
+- If you wish to use a local `genesis.json` file, do not add the `alloc` or `extra_data` block. The start up script will do it for you.

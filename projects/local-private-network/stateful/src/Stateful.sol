@@ -17,4 +17,7 @@ contract Stateful {
     require(x == 0);
     x = 1;
   }
+  function inc() public {
+    x = x + 1;
+  }
 }

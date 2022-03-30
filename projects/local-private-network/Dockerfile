@@ -20,6 +20,7 @@ WORKDIR /root
 COPY stateful ./stateful
 ADD ./start-private-network.sh .
 ADD ./deploy-local-network.sh .
+ADD ./genesis.json .
 ADD ./geth-linux-amd64 /bin/geth
 
 RUN curl -L https://foundry.paradigm.xyz | bash; \
