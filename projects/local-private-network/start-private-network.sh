@@ -3,7 +3,7 @@
 set -ex
 
 # clean up
-trap 'killall geth && rm -rf "$TMPDIR"' EXIT
+trap 'killall geth' EXIT
 trap "exit 1" SIGINT SIGTERM
 
 TMPDIR=$(mktemp -d)
