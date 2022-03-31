@@ -19,10 +19,11 @@ services:
       DB_WAIT_FOR_SYNC: "true"
       CHAIN_ID: "99"
       USE_GENESIS: "true"
-      EXTRA_START_ARGS: "--metrics --metrics.expensive --metrics.addr prometheus --metrics.port 9090"
+      EXTRA_START_ARGS: "--metrics --metrics.expensive --metrics.addr 0.0.0.0 --metrics.port 6060"
     ports:
       - "127.0.0.1:8545:8545"
       - "127.0.0.1:8546:8546"
+      - "127.0.0.1:6060:6060"
   ipld-eth-db:
     restart: always
     build:
@@ -36,6 +37,7 @@ services:
     ports:
       - "127.0.0.1:8077:5432"
     command: ["postgres", "-c", "log_statement=all"]
+  # YOU MUST UPDATE THE ops/metrics/env/prometheus.yml file to use foundry:6060 instead of localhost:6060
   prometheus:
     restart: always
     user: "987"
@@ -43,22 +45,14 @@ services:
     volumes:
       - ${vulcanize_ops}/metrics/etc:/etc/prometheus
       - ./prometheus-data:/prometheus
-    #extra_hosts:
-    #  - "r5:172.31.18.153"
     ports:
       - "127.0.0.1:9090:9090"
-      - "127.0.0.1:6060:6060"
   grafana:
     restart: always
     user: "472"
     image: grafana/grafana
     volumes:
       - ./grafana-data:/var/lib/grafana
-      #- /srv/grafana/etc:/etc/grafana
-      #- /srv/grafana/share:/usr/share/grafana
-      #- /srv/grafana/log:/var/log/grafana
-      #- /srv/grafana/plugins:/var/lib/grafana/plugins
-      #- /srv/grafana/provisioning:/etc/grafana/provisioning
     ports:
       - "127.0.0.1:3000:3000"
 volumes:
