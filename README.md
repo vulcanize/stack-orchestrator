@@ -42,10 +42,11 @@ The purpose of this project is as follows:
 
 If you want to test your local geth code, do the following:
 
-1. cd `projects/local-private-network`.
-2. `./wrapper.sh` - This script will do all the heavy lifting for you. Run the flag with -h to see all the options it provides. Example Run command: `./wrapper.sh -e remote -d local -v remove -u abdul -n alabaster.lan.vdb.to`
-3. Keep an eye out for the outputs from the docker container.
-4. Enter the docker container and do as you please.
+1. Update the `related-directory-mapping.sh` file with the path to your local repositories.
+2. cd `projects/local-private-network`.
+3. `./wrapper.sh` - This script will do all the heavy lifting for you. Run the flag with -h to see all the options it provides. Example Run command: `../wrapper.sh -e remote -d local-db -v remove -u abdul -n alabaster.lan.vdb.to -p "../../../related-directory-mapping.sh"`
+4. Keep an eye out for the outputs from the docker container.
+5. Enter the docker container and do as you please.
 
 ### Custom Docker Compose
 
@@ -53,10 +54,7 @@ You will also notice that there are multiple docker compose files.
 
 1. `docker-compose.yml` - This pulls a published container.
 2. `docker-compose-local-db.yml` - This will build the database image from the local repository, allowing you to test any changes.
-
-```
-docker-compose -f docker-compose-local-db.yml up --build --abort-on-container-exit
-```
+3. `docker-compose-local-db-prom.yml` - This will build the database image from the local repository, allowing you to test any changes, and also start prometheus.
 
 ### Key Notes:
 

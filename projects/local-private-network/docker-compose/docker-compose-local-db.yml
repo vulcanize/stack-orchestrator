@@ -1,11 +1,10 @@
 version: "3.2"
-
 services:
   foundry:
     restart: unless-stopped
     depends_on:
       - ipld-eth-db
-    build: ./
+    build: ../
     privileged: true
     environment:
       DB_USER: vdbm
@@ -26,7 +25,7 @@ services:
   ipld-eth-db:
     restart: always
     build:
-      context: ../../../ipld-eth-db/
+      context: ${vulcanize_ipld_eth_db}/
     environment:
       POSTGRES_USER: vdbm
       POSTGRES_DB: vulcanize_testing
