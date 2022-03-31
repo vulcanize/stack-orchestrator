@@ -16,6 +16,7 @@ db-waitforsync=bool   Should the statediff service start once geth has synced to
 rpc-port=port         change RPC port (default: 8545)
 rpc-addr=address      change RPC address (default: 127.0.0.1)
 chain-id=number       change chain ID (default: 99)
+extra-args=name        extra args to pass to geth on startup
 period=seconds        use a block time instead of instamine
 accounts=number       create multiple accounts (default: 1)
 address=address       eth address to add to genesis
@@ -42,6 +43,7 @@ PERIOD=0
 CHAINID=99
 ACCOUNTS=0
 ADDRESS=
+EXTRA_START_ARGS=
 gethdir=$HOME/testnet
 
 while [[ $1 ]]; do
@@ -59,6 +61,7 @@ while [[ $1 ]]; do
     --rpc-port)      shift; RPC_PORT=$1;;
     --rpc-addr)      shift; RPC_ADDRESS=$1;;
     --chain-id)      shift; CHAINID=$1;;
+    --extra-args)      shift; EXTRA_START_ARGS=$1;;
     --period)        shift; PERIOD=$1;;
     --accounts)      shift; ACCOUNTS=$1;;
     --save)          shift; SAVE=$1;;
@@ -166,7 +169,8 @@ echo \
   --statediff.db.type="$DB_TYPE" --statediff.db.driver="$DB_DRIVER" \
   --ws --ws.addr="0.0.0.0" --ws.origins '*' --ws.api=admin,debug,eth,miner,net,personal,txpool,web3 \
   --nat=none --miner.gasprice 16000000000 --nat=none \
-  --unlock="$(IFS=,; echo "${address[*]}")" --password="$gethdir/config/password" &
+  --unlock="$(IFS=,; echo "${address[*]}")" --password="$gethdir/config/password" \
+  $EXTRA_START_ARGS &
 geth \
   2> >(tee "$gethdir/geth.log" | grep --line-buffered Success | sed 's/^/geth: /' >&2) \
   --datadir "$gethdir" --networkid "$CHAINID" --port="$port" \
@@ -179,7 +183,8 @@ geth \
   --statediff.db.type="$DB_TYPE" --statediff.db.driver="$DB_DRIVER" \
   --ws --ws.addr="0.0.0.0" --ws.origins '*' --ws.api=admin,debug,eth,miner,net,personal,txpool,web3 \
   --nat=none --miner.gasprice 16000000000 --nat=none \
-  --unlock="$(IFS=,; echo "${address[*]}")" --password="$gethdir/config/password" &
+  --unlock="$(IFS=,; echo "${address[*]}")" --password="$gethdir/config/password" \
+  $EXTRA_START_ARGS &
 
 gethpid=$!
 echo "Geth started"

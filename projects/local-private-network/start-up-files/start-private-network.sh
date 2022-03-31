@@ -10,7 +10,7 @@ ETHDIR="/root/ethereum"
 mkdir -p $ETHDIR
 /bin/bash deploy-local-network.sh --rpc-addr 0.0.0.0 --db-user $DB_USER --db-password $DB_PASSWORD --db-name $DB_NAME \
   --db-host $DB_HOST --db-port $DB_PORT --db-write $DB_WRITE --dir "$ETHDIR" --address $ADDRESS \
-  --db-type $DB_TYPE --db-driver $DB_DRIVER --db-waitforsync $DB_WAIT_FOR_SYNC --chain-id $CHAIN_ID &
+  --db-type $DB_TYPE --db-driver $DB_DRIVER --db-waitforsync $DB_WAIT_FOR_SYNC --chain-id $CHAIN_ID --extra-args "$EXTRA_START_ARGS" &
 echo "sleeping 30 sec"
 # give it a few secs to start up
 sleep 30

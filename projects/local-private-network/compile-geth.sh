@@ -15,6 +15,8 @@ Spin up Foundry with Geth and a database.
 
 -u,         What username should we use for the remote build?
 
+-p,          Path to related-directory-mapping.sh file.
+
 EOF
 exit 1
 # EOF is found above and hence cat command stops reading. This is equivalent to echo but much neater when printing out.
@@ -22,7 +24,8 @@ exit 1
 
 u="abdul"
 n="alabaster.lan.vdb.to"
-while getopts ":e:u:n:" o; do
+p="../../related-directory-mapping.sh"
+while getopts ":e:u:n:p:" o; do
     case "${o}" in
         e)
             e=${OPTARG}
@@ -33,6 +36,10 @@ while getopts ":e:u:n:" o; do
             ;;
         n)
             n=${OPTARG}
+            ;;
+        p)
+            p=${OPTARG}
+            [[ -f "$p" ]] || showHelp
             ;;
         *)
             showHelp
@@ -49,12 +56,16 @@ start_path=$(pwd)
 
 trap "cd ${start_path}" SIGINT SIGTERM
 
-cd ../../../../
 echo -e "${GREEN}Building geth!${NC}"
 echo -e "${GREEN}e=${e}${NC}"
 echo -e "${GREEN}n=${n}${NC}"
 echo -e "${GREEN}u=${u}${NC}"
+echo -e "${GREEN}p=${p}${NC}"
 echo -e "${GREEN}Start path: ${start_path} ${NC}"
+
+source $p
+echo -e "${GREEN}Build Path: ${vulcanize_go_ethereum}"
+cd ${vulcanize_go_ethereum}
 
 if [[ "$e" = "local" ]] ; then
     echo -e "${GREEN}Building geth locally!${NC}"
@@ -79,6 +90,7 @@ if [[ "$e" == "remote" ]]; then
     rsync -uavz ./ ${u}@${n}:/home/${u}/go-ethereum-cerc
     ssh ${u}@${n} "cd /home/${u}/go-ethereum-cerc/ ; make geth ; chmod +x build/bin/geth"
     scp ${u}@${n}:/home/${u}/go-ethereum-cerc/build/bin/geth ${start_path}/geth-linux-amd64
+fi
 
 cd $start_path
 echo -e "${GREEN}geth build complete!${NC}"

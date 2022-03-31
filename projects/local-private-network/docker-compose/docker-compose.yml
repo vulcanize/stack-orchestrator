@@ -5,7 +5,7 @@ services:
     restart: unless-stopped
     depends_on:
       - ipld-eth-db
-    build: ./
+    build: ../
     environment:
       DB_USER: vdbm
       DB_NAME: vulcanize_testing
