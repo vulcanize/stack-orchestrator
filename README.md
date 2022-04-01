@@ -44,7 +44,7 @@ If you want to test your local geth code, do the following:
 
 1. Update the `related-directory-mapping.sh` file with the path to your local repositories.
 2. cd `projects/local-private-network`.
-3. `./wrapper.sh` - This script will do all the heavy lifting for you. Run the flag with -h to see all the options it provides. Example Run command: `../wrapper.sh -e remote -d local-db -v remove -u abdul -n alabaster.lan.vdb.to -p "../../../related-directory-mapping.sh"`
+3. `helper-scripts/wrapper.sh` - This script will do all the heavy lifting for you. Run the flag with -h to see all the options it provides. Example Run command: `./wrapper.sh -e remote -d local-db -v remove -u abdul -n alabaster.lan.vdb.to -p "../../../related-directory-mapping.sh"`
 4. Keep an eye out for the outputs from the docker container.
 5. Enter the docker container and do as you please.
 
@@ -55,6 +55,7 @@ You will also notice that there are multiple docker compose files.
 1. `docker-compose.yml` - This pulls a published container.
 2. `docker-compose-local-db.yml` - This will build the database image from the local repository, allowing you to test any changes.
 3. `docker-compose-local-db-prom.yml` - This will build the database image from the local repository, allowing you to test any changes, and also start prometheus.
+4. `docker-compose-lighthouse.yml` - This will build a container with `geth`, `ipld-eth-db` and `lighthouse`.
 
 ### Key Notes:
 
@@ -67,5 +68,4 @@ You will also notice that there are multiple docker compose files.
 - The `foundry/projects/local-private-network/deploy-local-network.sh` file does most heavy lifting. It spins up geth and triggers various events.
 - The `foundry/projects/local-private-network/start-private-network.sh` file triggers `deploy-local-network.sh`. This file runs all the tests.
 - The `geth` node will stay running even after the tests are terminated.
-- If you are building the database locally and make change to the schema, you will have to remove the volume: `docker-compose down -v local-private-network_vdb_db_eth_server`.
 - If you wish to use a local `genesis.json` file, do not add the `alloc` or `extra_data` block. The start up script will do it for you.

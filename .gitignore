@@ -1,4 +1,5 @@
 
-projects/local-private-network/geth-linux-amd64
-projects/local-private-network/docker-compose/grafana-data
-projects/local-private-network/docker-compose/prometheus-data
+projects/local-private-network/helper_scripts/geth-linux-amd64
+projects/local-private-network/docker/grafana-data
+projects/local-private-network/docker/prometheus-data
+projects/local-private-network/helper-scripts/geth-linux-amd64

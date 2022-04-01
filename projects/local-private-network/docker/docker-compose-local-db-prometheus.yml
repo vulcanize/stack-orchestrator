@@ -5,8 +5,9 @@ services:
     depends_on:
       - ipld-eth-db
       - prometheus
-    build: ../
-    privileged: true
+    build:
+      context: ../
+      dockerfile: ./docker/foundry.Dockerfile
     environment:
       DB_USER: vdbm
       DB_NAME: vulcanize_testing

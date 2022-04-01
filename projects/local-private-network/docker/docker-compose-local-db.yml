@@ -4,8 +4,9 @@ services:
     restart: unless-stopped
     depends_on:
       - ipld-eth-db
-    build: ../
-    privileged: true
+    build:
+      context: ../
+      dockerfile: ./docker/foundry.Dockerfile
     environment:
       DB_USER: vdbm
       DB_NAME: vulcanize_testing
