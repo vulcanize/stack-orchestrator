@@ -18,10 +18,10 @@ RUN apk add gcompat; echo "Sorry"
 WORKDIR /root
 
 COPY stateful ./stateful
-ADD ./start-up-files/start-private-network.sh .
-ADD ./start-up-files/deploy-local-network.sh .
-ADD ./start-up-files/genesis.json .
-ADD ./geth-linux-amd64 /bin/geth
+ADD start-up-files/start-private-network.sh .
+ADD start-up-files/deploy-local-network.sh .
+ADD start-up-files/genesis.json .
+ADD helper-scripts/geth-linux-amd64 /bin/geth
 
 RUN curl -L https://foundry.paradigm.xyz | bash; \
     /bin/bash -c 'source $HOME/.bashrc'; \

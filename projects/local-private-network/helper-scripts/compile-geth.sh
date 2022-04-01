@@ -24,7 +24,7 @@ exit 1
 
 u="abdul"
 n="alabaster.lan.vdb.to"
-p="../../related-directory-mapping.sh"
+p="../../../related-directory-mapping.sh"
 while getopts ":e:u:n:p:" o; do
     case "${o}" in
         e)

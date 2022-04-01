@@ -44,7 +44,7 @@ while getopts ":e:d:v:u:n:p:" o; do
             ;;
         d)
             d=${OPTARG}
-            [ "$d" = "local-db" -o "$d" = "remote" -o "$d" = "local-db-prom" ] || showHelp
+            [ "$d" = "local-db" -o "$d" = "remote" -o "$d" = "local-db-prom" -o "$d" = "lighthouse" ] || showHelp
             ;;
         v)
             v=${OPTARG}
@@ -85,24 +85,30 @@ echo -e "${GREEN} Sourcing: $p ${nc}"
 source $p
 
 if [[ "$v" = "keep" ]] ; then
-    trap "cd docker-compose/; docker-compose down --remove-orphans; cd ../" SIGINT SIGTERM
+    trap "cd ../docker/; docker-compose down --remove-orphans; cd ../" SIGINT SIGTERM
 fi
 
 if [[ "$v" = "remove" ]] ; then
-    trap "cd docker-compose/; docker-compose down -v --remove-orphans; cd ../" SIGINT SIGTERM
+    trap "cd ../docker/; docker-compose down -v --remove-orphans; cd ../" SIGINT SIGTERM
 fi
 
+# Consider just having one docker compose command and having users specify the dockerfile they want to use.
 if [[ "$d" = "local-db" ]] ; then
     echo -e "${GREEN}Building DB image using Local ipld-eth-db repository!${NC}"
-    docker-compose --env-file "$p" -f docker-compose/docker-compose-local-db.yml up --build
+    docker-compose --env-file "$p" -f ../docker/docker-compose-local-db.yml up --build
 fi
 
 if [[ "$d" = "local-db-prom" ]] ; then
     echo -e "${GREEN}Building DB image using Local ipld-eth-db repository and prometheus!${NC}"
-    docker-compose --env-file "$p" -f docker-compose/docker-compose-local-db-prometheus.yml up --build
+    docker-compose --env-file "$p" -f ../docker/docker-compose-local-db-prometheus.yml up --build
 fi
 
 if [[ "$d" = "remote" ]] ; then
     echo -e "${GREEN}Using a remote image for the DB!${NC}"
-    docker-compose -f docker-compose/docker-compose.yml up --build
+    docker-compose -f ../docker/docker-compose.yml up --build
+fi
+
+if [[ "$d" = "lighthouse" ]] ; then
+    echo -e "${GREEN}Using a remote image for the DB and building Lighthouse!${NC}"
+    docker-compose -f ../docker/docker-compose-lighthouse.yml up --build
 fi
