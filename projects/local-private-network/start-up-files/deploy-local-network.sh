@@ -83,15 +83,17 @@ fi
 # Create a genesis file if there is no existing chain.
 if [[ ! -f "$gethdir/config/genesis.json" ]]
 then
-  if [[ "$USE_GENESIS" != "true" ]]
-  for i in $(seq 0 "$ACCOUNTS"); do
-    address+=( "$(
-      geth 2>/dev/null account new --datadir "$gethdir" --password=$gethdir/config/password \
-        | grep -o -E "0x[A-Fa-f0-9]*" )" )
-    balance+=(' "'"${address[i]}"'": { "balance": "0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"}')
-    EXTRA_DATA="0x3132333400000000000000000000000000000000000000000000000000000000${address[0]#0x}0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
-  done
+for i in $(seq 0 "$ACCOUNTS"); do
+  address+=( "$(
+    geth 2>/dev/null account new --datadir "$gethdir" --password=$gethdir/config/password \
+      | grep -o -E "0x[A-Fa-f0-9]*" )" )
+  balance+=(' "'"${address[i]}"'": { "balance": "0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"}')
+  EXTRA_DATA="0x3132333400000000000000000000000000000000000000000000000000000000${address[0]#0x}0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
+done
+if [[ "$USE_GENESIS" != "true" ]]
   then
+  echo "NOT USING GENESIS FILE!!"
+  echo "USE_GENESIS = $USE_GENESIS"
     JSON_VAL='{
     "config": {
       "chainId": '"$CHAINID"',
@@ -119,7 +121,7 @@ then
     printf "%s\n" "${address[@]}" > "$gethdir/config/account"
   else
     echo "Using local genesis file"
-    jq '. + {"extraData": "'"$EXTRA_DATA"'"} + "alloc": {'"$balance"'}' > "$gethdir/config/genesis.json"
+    jq '. + {"extraData": "'"$EXTRA_DATA"'"} + {"alloc": {'"$balance"'}}' ./genesis.json> "$gethdir/config/genesis.json"
     geth 2>/dev/null --datadir "$gethdir" init "$gethdir/config/genesis.json"
     printf "%s\n" "${address[@]}" > "$gethdir/config/account"
   fi
