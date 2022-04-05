@@ -44,7 +44,7 @@ If you want to test your local geth code, do the following:
 
 1. Update the `related-directory-mapping.sh` file with the path to your local repositories.
 2. cd `projects/local-private-network`.
-3. `helper-scripts/wrapper.sh` - This script will do all the heavy lifting for you. Run the flag with -h to see all the options it provides. Example Run command: `./wrapper.sh -e remote -d local-db -v remove -u abdul -n alabaster.lan.vdb.to -p "../../../related-directory-mapping.sh"`
+3. `helper-scripts/wrapper.sh` - This script will do all the heavy lifting for you. Run the flag with -h to see all the options it provides. Example Run command: `./wrapper.sh -e remote -d ../docker/docker-compose.yml -v remove -u abdul -n alabaster.lan.vdb.to -p "../../../related-directory-mapping.sh"`
 4. Keep an eye out for the outputs from the docker container.
 5. Enter the docker container and do as you please.
 
