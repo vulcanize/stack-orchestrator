@@ -12,15 +12,15 @@ Spin up Foundry with Geth and a database.
 
 -e,         Should we compile geth on your "local" machine or in "docker" or on a "remote" machine or "skip" compiling. Recommended to use "docker" for releases
 
--d,         Should we build a "local" ipdl-eth-db image or use the "remote" one. Use "local" if you have made change to the DB.
+-d,         Should be the path to the docker compose file you want to use.
 
--v,         Should we "remove" the volume when bringind the image down or "keep" it?
+-v,         Should we "remove" the volume when bringing the image down or "keep" it?
 
 -u,         What username should we use for the remote build?
 
 -n,         What is the hostname for the remote build?
 
--p,          Path to related-directory-mapping.sh file.
+-p,         Path to related-directory-mapping.sh file.
 
 EOF
 exit 1
@@ -28,7 +28,7 @@ exit 1
 }
 
 e="local"
-d="docker"
+d="../docker/docker-compose.yml"
 v="keep"
 u="abdul"
 n="alabaster.lan.vdb.to"
@@ -44,7 +44,7 @@ while getopts ":e:d:v:u:n:p:" o; do
             ;;
         d)
             d=${OPTARG}
-            [ "$d" = "local-db" -o "$d" = "remote" -o "$d" = "local-db-prom" -o "$d" = "lighthouse" ] || showHelp
+            [[ -f "$d" ]] || showHelp
             ;;
         v)
             v=${OPTARG}
@@ -92,23 +92,26 @@ if [[ "$v" = "remove" ]] ; then
     trap "cd ../docker/; docker-compose down -v --remove-orphans; cd ../" SIGINT SIGTERM
 fi
 
+echo -e "${GREEN}Building DB image using ${d}${NC}"
+echo -e docker-compose --env-file "$p" -f "$d" up --build
+docker-compose --env-file "$p" -f "$d" up --build
 # Consider just having one docker compose command and having users specify the dockerfile they want to use.
-if [[ "$d" = "local-db" ]] ; then
-    echo -e "${GREEN}Building DB image using Local ipld-eth-db repository!${NC}"
-    docker-compose --env-file "$p" -f ../docker/docker-compose-local-db.yml up --build
-fi
-
-if [[ "$d" = "local-db-prom" ]] ; then
-    echo -e "${GREEN}Building DB image using Local ipld-eth-db repository and prometheus!${NC}"
-    docker-compose --env-file "$p" -f ../docker/docker-compose-local-db-prometheus.yml up --build
-fi
-
-if [[ "$d" = "remote" ]] ; then
-    echo -e "${GREEN}Using a remote image for the DB!${NC}"
-    docker-compose -f ../docker/docker-compose.yml up --build
-fi
-
-if [[ "$d" = "lighthouse" ]] ; then
-    echo -e "${GREEN}Using a remote image for the DB and building Lighthouse!${NC}"
-    docker-compose -f ../docker/docker-compose-lighthouse.yml up --build
-fi
+#if [[ "$d" = "local-db" ]] ; then
+#    echo -e "${GREEN}Building DB image using Local ipld-eth-db repository!${NC}"
+#    docker-compose --env-file "$p" -f ../docker/docker-compose-local-db.yml up --build
+#fi
+#
+#if [[ "$d" = "local-db-prom" ]] ; then
+#    echo -e "${GREEN}Building DB image using Local ipld-eth-db repository and prometheus!${NC}"
+#    docker-compose --env-file "$p" -f ../docker/docker-compose-local-db-prometheus.yml up --build
+#fi
+#
+#if [[ "$d" = "remote" ]] ; then
+#    echo -e "${GREEN}Using a remote image for the DB!${NC}"
+#    docker-compose -f ../docker/docker-compose.yml up --build
+#fi
+#
+#if [[ "$d" = "lighthouse" ]] ; then
+#    echo -e "${GREEN}Using a remote image for the DB and building Lighthouse!${NC}"
+#    docker-compose -f ../docker/docker-compose-lighthouse.yml up --build
+#fi
