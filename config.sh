@@ -5,6 +5,7 @@
 vulcanize_ops=/Users/abdulrabbani/GitHub/cerc/ops
 vulcanize_foundry_test=/Users/abdulrabbani/GitHub/cerc/foundry-test
 vulcanize_ipld_eth_db=/Users/abdulrabbani/GitHub/cerc/ipld-eth-db
+vulcanize_ipld_ethcl_indexer=/Users/abdulrabbani/GitHub/cerc/ipld-ethcl-indexer/
 vulcanize_go_ethereum=/Users/abdulrabbani/GitHub/cerc/forks/go-ethereum-cerc/
 
 extra_args="--metrics --metrics.expensive --metrics.addr 0.0.0.0 --metrics.port 6060"
