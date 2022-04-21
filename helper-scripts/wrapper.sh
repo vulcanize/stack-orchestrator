@@ -12,7 +12,8 @@ Spin up Foundry with Geth and a database.
 
 -e,         Should we compile geth on your "local" machine or in "docker" or on a "remote" machine or "skip" compiling. Recommended to use "docker" for releases
 
--d,         Should be the path to the docker compose file you want to use.
+-d,         Should be the path(s) to the docker compose file you want to use. You can string together multiple docker
+            compose files. Just make sure the services do not have conflicts!
 
 -v,         Should we "remove" the volume when bringing the image down or "keep" it?
 
@@ -20,7 +21,7 @@ Spin up Foundry with Geth and a database.
 
 -n,         What is the hostname for the remote build?
 
--p,         Path to related-directory-mapping.sh file.
+-p,         Path to config.sh file.
 
 EOF
 exit 1
@@ -28,11 +29,10 @@ exit 1
 }
 
 e="local"
-d="../docker/docker-compose.yml"
 v="keep"
 u="abdul"
 n="alabaster.lan.vdb.to"
-p="../../../related-directory-mapping.sh"
+p="../../config.sh"
 GREEN='\033[0;32m'
 RED='\033[0;31m'
 NC='\033[0m'
@@ -42,9 +42,8 @@ while getopts ":e:d:v:u:n:p:" o; do
             e=${OPTARG}
             [ "$e" = "local" -o "$e" = "docker" -o "$e" = "skip" -o "$e" = "remote" ] ||showHelp
             ;;
-        d)
-            d=${OPTARG}
-            [[ -f "$d" ]] || showHelp
+        d)  composeFiles+=($OPTARG)
+            [[ -f "$OPTARG" ]] || showHelp
             ;;
         v)
             v=${OPTARG}
@@ -71,7 +70,7 @@ shift $((OPTIND-1))
 
 echo -e "${GREEN} STARTING PARAMS${NC}"
 echo -e "${GREEN} e=${e} ${NC}"
-echo -e "${GREEN} d=${d} ${NC}"
+echo -e "${GREEN} composeFiles=${composeFiles[@]} ${NC}"
 echo -e "${GREEN} v=${v} ${NC}"
 echo -e "${GREEN} u=${u} ${NC}"
 echo -e "${GREEN} n=${n} ${NC}"
@@ -84,34 +83,20 @@ fi
 echo -e "${GREEN} Sourcing: $p ${nc}"
 source $p
 
+fileArgs=()
+for files in "${composeFiles[@]}"; do fileArgs+=(-f "$files"); done
+
+echo -e "${GREEN} fileArgs: ${fileArgs[@]} ${nc}"
+
+
 if [[ "$v" = "keep" ]] ; then
-    trap "cd ../docker/; docker-compose down --remove-orphans; cd ../" SIGINT SIGTERM
+    trap 'cd ../docker/; docker-compose --env-file $p ${fileArgs[@]} down --remove-orphans; cd ../' SIGINT SIGTERM
 fi
 
 if [[ "$v" = "remove" ]] ; then
-    trap "cd ../docker/; docker-compose down -v --remove-orphans; cd ../" SIGINT SIGTERM
+    trap 'cd ../docker/; docker-compose --env-file $p ${fileArgs[@]} down -v --remove-orphans; cd ../' SIGINT SIGTERM
 fi
 
 echo -e "${GREEN}Building DB image using ${d}${NC}"
-echo -e docker-compose --env-file "$p" -f "$d" up --build
-docker-compose --env-file "$p" -f "$d" up --build
-# Consider just having one docker compose command and having users specify the dockerfile they want to use.
-#if [[ "$d" = "local-db" ]] ; then
-#    echo -e "${GREEN}Building DB image using Local ipld-eth-db repository!${NC}"
-#    docker-compose --env-file "$p" -f ../docker/docker-compose-local-db.yml up --build
-#fi
-#
-#if [[ "$d" = "local-db-prom" ]] ; then
-#    echo -e "${GREEN}Building DB image using Local ipld-eth-db repository and prometheus!${NC}"
-#    docker-compose --env-file "$p" -f ../docker/docker-compose-local-db-prometheus.yml up --build
-#fi
-#
-#if [[ "$d" = "remote" ]] ; then
-#    echo -e "${GREEN}Using a remote image for the DB!${NC}"
-#    docker-compose -f ../docker/docker-compose.yml up --build
-#fi
-#
-#if [[ "$d" = "lighthouse" ]] ; then
-#    echo -e "${GREEN}Using a remote image for the DB and building Lighthouse!${NC}"
-#    docker-compose -f ../docker/docker-compose-lighthouse.yml up --build
-#fi
+echo -e "${GREEN}docker-compose --env-file $p ${fileArgs[@]} up --build${NC}"
+docker-compose --env-file "$p" ${fileArgs[@]} up --build
