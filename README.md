@@ -1,3 +1,4 @@
+- [Foundry README](#foundry-readme)
 - [Overview](#overview)
 - [Building The Stack](#building-the-stack)
   - [Components](#components)
@@ -6,12 +7,15 @@
     - [`helper-scripts/wrapper.sh`](#-helper-scripts-wrappersh-)
     - [Utilizing Multiple `docker-compose-*` Files Together](#utilizing-multiple--docker-compose----files-together)
   - [Building Locally](#building-locally)
+  - [Utilizing CI/CD](#utilizing-ci-cd)
 - [Additional Notes](#additional-notes)
   - [Geth Specific](#geth-specific)
   - [Monitoring Specific](#monitoring-specific)
   - [`ipld-eth-server` Specific](#-ipld-eth-server--specific)
 
 <small><i><a href='http://ecotrust-canada.github.io/markdown-toc/'>Table of contents generated with markdown-toc</a></i></small>
+
+# Foundry README
 
 # Overview
 
@@ -24,7 +28,7 @@ The current applications that can be built are:
 - `ipld-eth-db`.
 - `prometheus`.
 - `grafana`.
-- `ipld-ethcl-indexer` - Coming Soon.
+- `ipld-ethcl-indexer`.
 - `ipld-eth-server` - Needs Debugging.
 
 # Building The Stack
@@ -90,6 +94,16 @@ To build the application locally, do the following:
     ```
 
 4.  When you want to clean up your local environment, simply hit `ctrl + c`. The bash script will remove all containers and any volumes created (if you specify `-v remove`).
+
+## Utilizing CI/CD
+
+If you want to utilize `foundry-test` within your CI/CD, you will do it as follows:
+
+1.  Create a `Dockerfile` within your repository. This Dockerfile should start you application.
+2.  Create a `docker-compose` file for `local` and `latest` within the `docker/` directory in `foundry-test`.
+3.  Create a manual Github Action that is triggered by `workflow_dispatch`. [See the following example.](https://github.com/vulcanize/ipld-ethcl-indexer/blob/feature/7-testing-with-ginko%2Bcicd/.github/workflows/on-pr-manual.yml)
+    1.  You must merge this file into `master/main` before being able to use it. `workflow_dispatch` will not work unless it is in `master/main` first. This is a design fault.
+4.  Create an automated Github Action that is triggered by `pull_request`.
 
 # Additional Notes
 
