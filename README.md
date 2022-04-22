@@ -15,6 +15,8 @@
 
 <small><i><a href='http://ecotrust-canada.github.io/markdown-toc/'>Table of contents generated with markdown-toc</a></i></small>
 
+# Foundry README
+
 # Overview
 
 This repository serves many functions, but the primary function is to test various applications within the stack. [Foundry](https://book.getfoundry.sh/) is utilized primarily for testing `geth` within a test net.
@@ -61,7 +63,7 @@ This script does all the heavy lifting. It will do the following for you:
 
 ### Utilizing Multiple `docker-compose-*` Files Together
 
-The docker-compose files found in `docker/local` and `docker/latest` are meant to be stand-alone files. You can pass in as many files as you want to the `[wrapper.sh](<http://wrapper.sh>)` script. A few notes on this:
+The docker-compose files found in `docker/local` and `docker/latest` are meant to be stand-alone files. You can pass in as many files as you want to the [`wrapper.sh`](http://wrapper.sh) script. A few notes on this:
 
 - This lets you build as many services as you want and mix and match `local` and `latest` services.
 - Be careful that you don’t spin up the `local` and `latest` service at the same time.
@@ -99,18 +101,17 @@ If you want to utilize `foundry-test` within your CI/CD, you will do it as follo
 
 1.  Create a `Dockerfile` within your repository. This Dockerfile should start you application.
 2.  Create a `docker-compose` file for `local` and `latest` within the `docker/` directory in `foundry-test`.
-3.  Create a manual Github Action that is triggered by `workflow_dispatch`. [See the following example.](https://github.com/vulcanize/ipld-ethcl-indexer/blob/feature/7-testing-with-ginko%2Bcicd/.github/workflows/on-pr-manual.yml)
+3.  Create a manual Github Action that is triggered by `pull_request` and `workflow_dispatch`.
     1.  You must merge this file into `master/main` before being able to use it. `workflow_dispatch` will not work unless it is in `master/main` first. This is a design fault.
-4.  Create an automated Github Action that is triggered by `pull_request`.
 
 ### Case Study: `ipld-ethcl-indexer`.
 
 I followed this process for `ipld-ethcl-indexer`. Here are a few key files.
 
-1.  `[vulcanize/ipld-ethcl-indexer:Dockerfile](<https://github.com/vulcanize/ipld-ethcl-indexer/blob/main/Dockerfile>)` - Compiles and starts the application
-2.  `[vulcanize/foundry-test:docker/local/docker-compose-ipld-ethcl-indexer.yml](<https://github.com/vulcanize/foundry-test/blob/feature/build-stack/docker/local/docker-compose-ipld-ethcl-indexer.yml>)` - A `docker-compose` file to start the container.
-3.  `[vulcanize/ipld-ethcl-indexer:.github/workflows/on-pr-manual.yml](<https://github.com/vulcanize/ipld-ethcl-indexer/blob/main/.github/workflows/on-pr-manual.yml>)` - This allows users to trigger unit tests with specified parameters manually.
-4.  `[vulcanize/ipld-ethcl-indexer:.github/workflows/on-pr-automated.yaml](<https://github.com/vulcanize/ipld-ethcl-indexer/blob/main/.github/workflows/on-pr-automated.yaml>)` - Automatically triggered on `pull_request`. If users ever need to reference a specific branch for `ipld-eth-db` or `foundry-test`, they can easily do so in the `env` variable.
+1.  [`vulcanize/ipld-ethcl-indexer:Dockerfile`](https://github.com/vulcanize/ipld-ethcl-indexer/blob/main/Dockerfile) - Compiles and starts the application
+2.  [`vulcanize/foundry-test:docker/local/docker-compose-ipld-ethcl-indexer.yml`](https://github.com/vulcanize/foundry-test/blob/feature/build-stack/docker/local/docker-compose-ipld-ethcl-indexer.yml) - A `docker-compose` file to start the container.
+3.  [`vulcanize/ipld-ethcl-indexer:.github/workflows/on-pr-automated.yaml`](https://github.com/vulcanize/ipld-ethcl-indexer/blob/main/.github/workflows/on-pr.yml) - Automatically triggered on `pull_request`. If users ever need to reference a specific branch for `ipld-eth-db` or `foundry-test`, they can easily do so in the `env` variable.
+    1.  You can also easily run this GHA manually and provide input parameters.
 
 # Additional Notes
 
@@ -133,7 +134,7 @@ Here are a few notes to keep in mind. I **highly recommend** reading every bulle
 ## Monitoring Specific
 
 - If you want to utilize Prometheus and Grafana. Do the following:
-  - Within your local `vulcanize/ops` repo, update the following file `metrics/etc/prometheus.yml`. Update `[localhost:6060](<http://localhost:6060>)` —> `go-ethereum:6060`.
+  - Within your local `vulcanize/ops` repo, update the following file `metrics/etc/prometheus.yml`. Update `[localhost:6060]` —> `go-ethereum:6060`.
 
 ## `ipld-eth-server` Specific
 
