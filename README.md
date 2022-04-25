@@ -73,22 +73,22 @@ The docker-compose files found in `docker/local` and `docker/latest` are meant t
 
 To build the application locally, do the following:
 
-1.  Update the `[config.sh](<http://config.sh>)` file with the correct local paths to the specified repositories.
+1.  Update the `config.sh` file with the correct local paths to the specified repositories.
 
 2.  `cd helper-scripts/`.
 
 3.  Utilize the `./wrapper.sh` to start the application. An example start-up command might look like the following:
 
     ```bash
-    ./wrapper.sh \\
-      -e remote \\
-      -d ../docker/local/docker-compose-db.yml \\
-      -d ../docker/local/docker-compose-go-ethereum.yml \\
-      -d ../docker/local/docker-compose-prometheus-grafana.yml \\
-      -d ../docker/latest/docker-compose-lighthouse.yml \\
-      -u abdul \\
-      -n alabaster.vdb.to \\
-      -v remove \\
+    ./wrapper.sh \
+      -e remote \
+      -d ../docker/local/docker-compose-db.yml \
+      -d ../docker/local/docker-compose-go-ethereum.yml \
+      -d ../docker/local/docker-compose-prometheus-grafana.yml \
+      -d ../docker/latest/docker-compose-lighthouse.yml \
+      -u abdul \
+      -n alabaster.vdb.to \
+      -v remove \
       -p ../config.sh
 
     ```
@@ -101,7 +101,7 @@ If you want to utilize `foundry-test` within your CI/CD, you will do it as follo
 
 1.  Create a `Dockerfile` within your repository. This Dockerfile should start you application.
 2.  Create a `docker-compose` file for `local` and `latest` within the `docker/` directory in `foundry-test`.
-3.  Create a manual Github Action that is triggered by `pull_request` and `workflow_dispatch`.
+3.  Create a Github Action that is triggered by `pull_request` and `workflow_dispatch`.
     1.  You must merge this file into `master/main` before being able to use it. `workflow_dispatch` will not work unless it is in `master/main` first. This is a design fault.
 
 ### Case Study: `ipld-ethcl-indexer`.
@@ -110,7 +110,7 @@ I followed this process for `ipld-ethcl-indexer`. Here are a few key files.
 
 1.  [`vulcanize/ipld-ethcl-indexer:Dockerfile`](https://github.com/vulcanize/ipld-ethcl-indexer/blob/main/Dockerfile) - Compiles and starts the application
 2.  [`vulcanize/foundry-test:docker/local/docker-compose-ipld-ethcl-indexer.yml`](https://github.com/vulcanize/foundry-test/blob/feature/build-stack/docker/local/docker-compose-ipld-ethcl-indexer.yml) - A `docker-compose` file to start the container.
-3.  [`vulcanize/ipld-ethcl-indexer:.github/workflows/on-pr-automated.yaml`](https://github.com/vulcanize/ipld-ethcl-indexer/blob/main/.github/workflows/on-pr.yml) - Automatically triggered on `pull_request`. If users ever need to reference a specific branch for `ipld-eth-db` or `foundry-test`, they can easily do so in the `env` variable.
+3.  [`vulcanize/ipld-ethcl-indexer:.github/workflows/on-pr.yml`](https://github.com/vulcanize/ipld-ethcl-indexer/blob/main/.github/workflows/on-pr.yml) - Automatically triggered on `pull_request`. If users ever need to reference a specific branch for `ipld-eth-db` or `foundry-test`, they can easily do so in the `env` variable.
     1.  You can also easily run this GHA manually and provide input parameters.
 
 # Additional Notes
