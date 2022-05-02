@@ -3,7 +3,7 @@ services:
   ipld-eth-server:
     restart: unless-stopped
     build:
-      context: ${vulcanize_ipld_eth_db}
+      context: ${vulcanize_ipld_eth_server}
       dockerfile: ./Dockerfile
     environment:
       IPLD_SERVER_GRAPHQL: "true"
@@ -20,6 +20,8 @@ services:
       ETH_FORWARD_ETH_CALLS: $eth_forward_eth_calls
       ETH_PROXY_ON_ERROR: $eth_proxy_on_error
       ETH_HTTP_PATH: $eth_http_path
+      WATCHED_ADDRESS_GAP_FILLER_ENABLED: $watched_addres_gap_filler_enabled
+      WATCHED_ADDRESS_GAP_FILLER_INTERVAL: $watched_addres_gap_filler_interval
     volumes:
       - type: bind
         source: ../../start-up-files/ipld-eth-server/chain.json
@@ -27,15 +29,27 @@ services:
     ports:
       - "127.0.0.1:8081:8081"
 
+  contract:
+    depends_on:
+      - go-ethereum
+    build:
+      context: ${vulcanize_ipld_eth_server}test/contract
+      args:
+        ETH_ADDR: "http://go-ethereum:8545"
+    environment:
+      ETH_ADDR: "http://go-ethereum:8545"
+    ports:
+      - "127.0.0.1:3000:3000"
+
   graphql:
     restart: unless-stopped
     depends_on:
       - ipld-eth-db
     image: vulcanize/postgraphile:v1.0.1
     environment:
-      - PG_HOST=db
+      - PG_HOST=ipld-eth-db
       - PG_PORT=5432
-      - PG_DATABASE=vulcanize_public
+      - PG_DATABASE=vulcanize_testing
       - PG_USER=vdbm
       - PG_PASSWORD=password
       - SCHEMA=public,eth
