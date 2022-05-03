@@ -1,13 +1,13 @@
 version: "3.2"
 
 services:
-  foundry:
+  go-ethereum:
     restart: unless-stopped
     depends_on:
       - ipld-eth-db
     build:
-      context: ../
-      dockerfile: ./docker/foundry.Dockerfile
+      context: ../../
+      dockerfile: ./docker/local/go-ethereum.Dockerfile
     environment:
       DB_USER: vdbm
       DB_NAME: vulcanize_testing
@@ -20,22 +20,7 @@ services:
       DB_WAIT_FOR_SYNC: "true"
       CHAIN_ID: "99"
       USE_GENESIS: "true"
+      EXTRA_START_ARGS: ${extra_args}
     ports:
       - "127.0.0.1:8545:8545"
       - "127.0.0.1:8546:8546"
-
-  ipld-eth-db:
-    restart: always
-    image: vulcanize/ipld-eth-db:v3.2.0
-    environment:
-      POSTGRES_USER: "vdbm"
-      POSTGRES_DB: "vulcanize_testing"
-      POSTGRES_PASSWORD: "password"
-    volumes:
-      - vdb_db_eth_server:/var/lib/postgresql/data
-    ports:
-      - "127.0.0.1:8077:5432"
-    command: ["postgres", "-c", "log_statement=all"]
-
-volumes:
-  vdb_db_eth_server:

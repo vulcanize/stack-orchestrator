@@ -15,7 +15,7 @@ Spin up Foundry with Geth and a database.
 
 -u,         What username should we use for the remote build?
 
--p,          Path to related-directory-mapping.sh file.
+-p,          Path to config.sh file.
 
 EOF
 exit 1
@@ -24,7 +24,7 @@ exit 1
 
 u="abdul"
 n="alabaster.lan.vdb.to"
-p="../../../related-directory-mapping.sh"
+p="../../config.sh"
 while getopts ":e:u:n:p:" o; do
     case "${o}" in
         e)
