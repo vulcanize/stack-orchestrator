@@ -1,0 +1,20 @@
+version: "3.2"
+services:
+  ipld-ethcl-indexer:
+    restart: unless-stopped
+    depends_on:
+      - ipld-eth-db
+      - lighthouse
+    build:
+      context: ${vulcanize_ipld_ethcl_indexer}
+      dockerfile: ./Dockerfile
+    environment:
+      DB_NAME: "vulcanize_testing"
+      DB_ADDRESS: "ipld-eth-db"
+      DB_PORT: 5432
+      DB_USER: "vdbm"
+      DB_DRIVER: "PGX"
+      DB_PASSWORD: "password"
+      BC_ADDRESS: "lighthouse"
+      BC_PORT: 5052
+      LOG_LEVEL: "info"
