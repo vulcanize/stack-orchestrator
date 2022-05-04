@@ -80,7 +80,7 @@ To build the application locally, do the following:
 3.  Utilize the `./wrapper.sh` to start the application. An example start-up command might look like the following:
 
     ```bash
-    ./wrapper.sh \
+    VULCANIZE_REPO_BASE_DIR=/path-to-vulcanize-repos ./wrapper.sh \
       -e remote \
       -d ../docker/local/docker-compose-db.yml \
       -d ../docker/local/docker-compose-go-ethereum.yml \
