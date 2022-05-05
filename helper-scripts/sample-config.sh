@@ -17,3 +17,4 @@ eth_proxy_on_error=false
 eth_http_path=''
 watched_addres_gap_filler_enabled=false
 watched_addres_gap_filler_interval=5
+ethcl_capture_mode=boot
