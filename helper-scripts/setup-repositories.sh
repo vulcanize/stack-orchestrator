@@ -69,6 +69,6 @@ if [ $? -ne 0 ]; then
 fi
 
 
-if [[ ! -f $vulcanize_stack_orchestrator ]] ; then
+if [[ ! -d $vulcanize_stack_orchestrator ]] ; then
     echo -e "${RED} We highly recommend moving this repository to: $vulcanize_stack_orchestrator${NC}"
 fi
