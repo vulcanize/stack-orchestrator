@@ -1,3 +1,5 @@
 helper-scripts/geth-linux-amd64
 docker/local/grafana-data
 docker/local/prometheus-data
+local-config.sh
+config.sh
