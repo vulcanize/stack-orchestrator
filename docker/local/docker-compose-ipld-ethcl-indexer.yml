@@ -18,3 +18,4 @@ services:
       BC_ADDRESS: "lighthouse"
       BC_PORT: 5052
       LOG_LEVEL: "info"
+      CAPTURE_MODE: ${ethcl_capture_mode}
