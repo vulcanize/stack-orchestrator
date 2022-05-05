@@ -1,27 +1,25 @@
+- [Foundry README](#foundry-readme)
 - [Overview](#overview)
 - [Building The Stack](#building-the-stack)
+  - [Quick Start](#quick-start)
   - [Components](#components)
     - [Local Versus Latest](#local-versus-latest)
     - [`config.sh`](#-configsh-)
     - [`helper-scripts/wrapper.sh`](#-helper-scripts-wrappersh-)
     - [Utilizing Multiple `docker-compose-*` Files Together](#utilizing-multiple--docker-compose----files-together)
-  - [Building Locally](#building-locally)
   - [Utilizing CI/CD](#utilizing-ci-cd)
     - [Case Study: `ipld-ethcl-indexer`.](#case-study---ipld-ethcl-indexer-)
 - [Additional Notes](#additional-notes)
   - [Geth Specific](#geth-specific)
   - [Monitoring Specific](#monitoring-specific)
-  - [`ipld-eth-server` Specific](#-ipld-eth-server--specific)
 
 <small><i><a href='http://ecotrust-canada.github.io/markdown-toc/'>Table of contents generated with markdown-toc</a></i></small>
-
-# Foundry README
 
 # Overview
 
 This repository serves many functions, but the primary function is to test various applications within the stack. [Foundry](https://book.getfoundry.sh/) is utilized primarily for testing `geth` within a test net.
 
-The current applications that we can build using `foundry-test` are:
+The current applications that we can build using `stack-orchestrator` are:
 
 - `lighthouse`.
 - `vulcanize/go-ethereum`.
@@ -29,11 +27,76 @@ The current applications that we can build using `foundry-test` are:
 - `prometheus`.
 - `grafana`.
 - `ipld-ethcl-indexer`.
-- `ipld-eth-server` - Needs Debugging.
+- `ipld-eth-server`.
 
 # Building The Stack
 
 This section will highlight how users can build the stack.
+
+## Quick Start
+
+If you want to quickly get all the applications mentioned above cloned and running. Use the following guide.
+
+1.  Clone the stack-orchestrator repository.
+
+```bash
+# It is recommended that you utilize the directory below.
+mkdir -p ~/vulcanize
+cd ~/vulcanize
+git clone git@github.com:vulcanize/stack-orchestrator.git
+
+```
+
+2.  Create a `config.sh` file.
+
+```bash
+cd stack-orchestrator/helper-scripts
+./create-config.sh
+## Optional flags
+# ./create-config.sh -b ~/GitHub/cerc -p ../local-config.sh
+
+```
+
+3.  Run the setup script.
+
+```bash
+./setup-repositories.sh
+## Optional Flags
+# ./setup-repositories.sh -c ../config.sh -p ssh
+# ./setup-repositories.sh -c ../local-config.sh -p ssh
+# ./setup-repositories.sh -c ../config.sh -p https
+
+```
+
+4.  Optional - If you did not initially use `~/vulcanize`, move the `stack-orchestrator` directory to `~/vulcanize`.
+
+5.  Optional - If you already have the repositories that the `setup-repositories.sh` script clones for you, you can create a `local-config.sh` file.
+
+    ```bash
+    # Example command
+    ./create-config.sh -b ~/GitHub/cerc -p ../local-config.sh
+
+    # Update all the file as you wish you reflect the location of each repository.
+    vim local-config.sh
+
+
+    ```
+
+6.  Build the entire stack. Remove lines for the parts of the stack you don’t want to build.
+
+```bash
+./wrapper.sh -e docker \
+  -d ../docker/latest/docker-compose-db.yml \
+  -d ../docker/local/docker-compose-ipld-eth-server.yml \
+  -d ../docker/latest/docker-compose-lighthouse.yml \
+  -d ../docker/local/docker-compose-ipld-ethcl-indexer.yml \
+  -d ../docker/local/docker-compose-go-ethereum.yml \
+  -v remove \
+  -p ../config.sh
+
+```
+
+7.  When you want to clean up your local environment, hit `ctrl + c`. The bash script will remove all containers and any volumes created (if you specify `v remove`).
 
 ## Components
 
@@ -63,44 +126,18 @@ This script does all the heavy lifting. It will do the following for you:
 
 ### Utilizing Multiple `docker-compose-*` Files Together
 
-The docker-compose files found in `docker/local` and `docker/latest` are meant to be stand-alone files. You can pass in as many files as you want to the [`wrapper.sh`](http://wrapper.sh) script. A few notes on this:
+The docker-compose files found in `docker/local` and `docker/latest` are meant to be stand-alone files. You can pass in as many files as you want to the `wrapper.sh` script. A few notes on this:
 
 - This lets you build as many services as you want and mix and match `local` and `latest` services.
 - Be careful that you don’t spin up the `local` and `latest` service at the same time.
   - For example, if you attempt to build pass `docker/local/docker-compose-db.yml` and `docker/latest/docker-compose-db.yml` at the same time you will run into an error. They both try to expose the same ports and share the same service name.
 
-## Building Locally
-
-To build the application locally, do the following:
-
-1.  Update the `config.sh` file with the correct local paths to the specified repositories.
-
-2.  `cd helper-scripts/`.
-
-3.  Utilize the `./wrapper.sh` to start the application. An example start-up command might look like the following:
-
-    ```bash
-    VULCANIZE_REPO_BASE_DIR=/path-to-vulcanize-repos ./wrapper.sh \
-      -e remote \
-      -d ../docker/local/docker-compose-db.yml \
-      -d ../docker/local/docker-compose-go-ethereum.yml \
-      -d ../docker/local/docker-compose-prometheus-grafana.yml \
-      -d ../docker/latest/docker-compose-lighthouse.yml \
-      -u abdul \
-      -n alabaster.vdb.to \
-      -v remove \
-      -p ../config.sh
-
-    ```
-
-4.  When you want to clean up your local environment, hit `ctrl + c`. The bash script will remove all containers and any volumes created (if you specify `-v remove`).
-
 ## Utilizing CI/CD
 
-If you want to utilize `foundry-test` within your CI/CD, you will do it as follows:
+If you want to utilize `stack-orchestrator` within your CI/CD, you will do it as follows:
 
 1.  Create a `Dockerfile` within your repository. This Dockerfile should start you application.
-2.  Create a `docker-compose` file for `local` and `latest` within the `docker/` directory in `foundry-test`.
+2.  Create a `docker-compose` file for `local` and `latest` within the `docker/` directory in `stack-orchestrator`.
 3.  Create a Github Action that is triggered by `pull_request` and `workflow_dispatch`.
     1.  You must merge this file into `master/main` before being able to use it. `workflow_dispatch` will not work unless it is in `master/main` first. This is a design fault.
 
@@ -109,8 +146,8 @@ If you want to utilize `foundry-test` within your CI/CD, you will do it as follo
 I followed this process for `ipld-ethcl-indexer`. Here are a few key files.
 
 1.  [`vulcanize/ipld-ethcl-indexer:Dockerfile`](https://github.com/vulcanize/ipld-ethcl-indexer/blob/main/Dockerfile) - Compiles and starts the application
-2.  [`vulcanize/foundry-test:docker/local/docker-compose-ipld-ethcl-indexer.yml`](https://github.com/vulcanize/foundry-test/blob/feature/build-stack/docker/local/docker-compose-ipld-ethcl-indexer.yml) - A `docker-compose` file to start the container.
-3.  [`vulcanize/ipld-ethcl-indexer:.github/workflows/on-pr.yml`](https://github.com/vulcanize/ipld-ethcl-indexer/blob/main/.github/workflows/on-pr.yml) - Automatically triggered on `pull_request`. If users ever need to reference a specific branch for `ipld-eth-db` or `foundry-test`, they can easily do so in the `env` variable.
+2.  [`vulcanize/stack-orchestrator:docker/local/docker-compose-ipld-ethcl-indexer.yml`](https://github.com/vulcanize/stack-orchestrator/blob/main/docker/local/docker-compose-ipld-ethcl-indexer.yml) - A `docker-compose` file to start the container.
+3.  [`vulcanize/ipld-ethcl-indexer:.github/workflows/on-pr.yml`](https://github.com/vulcanize/ipld-ethcl-indexer/blob/main/.github/workflows/on-pr.yml) - Automatically triggered on `pull_request`. If users ever need to reference a specific branch for `ipld-eth-db` or `stack-orchestrator`, they can easily do so in the `env` variable.
     1.  You can also easily run this GHA manually and provide input parameters.
 
 # Additional Notes
@@ -121,8 +158,8 @@ Here are a few notes to keep in mind. I **highly recommend** reading every bulle
 
 - If you want to build `geth` remotely, talk to Shane to create a user on `alabaster` (or any other server you want).
   - I prefer to build remotely because the builds are performed on a Linux machine. When I try to build locally, I get portability issues.
-- The command to [deploy](https://onbjerg.github.io/foundry-book/forge/deploying.html) the smart contract is: `forge create --keystore $(cat ~/transaction_info/CURRENT_ETH_KEYSTORE_FILE) --rpc-url <http://127.0.0.1:8545> --constructor-args 1 --password $(cat ${ETHDIR}/config/password) --legacy /root/stateful/src/Stateful.sol:Stateful`
-- The command to create a [transaction](https://onbjerg.github.io/foundry-book/reference/cast.html) (which will create a new block) is: `cast send --keystore $(cat ~/transaction_info/CURRENT_ETH_KEYSTORE_FILE) --rpc-url <http://127.0.0.1:8545> --password $(cat $(cat ~/transaction_info/ETHDIR)) --legacy $(cat ~/transaction_info/STATEFUL_TEST_DEPLOYED_ADDRESS) "inc()"`
+- The command to [deploy](https://onbjerg.github.io/foundry-book/forge/deploying.html) the smart contract is: `forge create --keystore $(cat ~/transaction_info/CURRENT_ETH_KEYSTORE_FILE) --rpc-url http://127.0.0.1:8545 --constructor-args 1 --password $(cat ${ETHDIR}/config/password) --legacy /root/stateful/src/Stateful.sol:Stateful`
+- The command to create a [transaction](https://onbjerg.github.io/foundry-book/reference/cast.html) (which will create a new block) is: `cast send --keystore $(cat ~/transaction_info/CURRENT_ETH_KEYSTORE_FILE) --rpc-url http://127.0.0.1:8545 --password $(cat $(cat ~/transaction_info/ETHDIR)) --legacy $(cat ~/transaction_info/STATEFUL_TEST_DEPLOYED_ADDRESS) "inc()"`
 - To manually send a transaction (which will trigger the mining of a new block), simply run the following script: `~/transaction_info/NEW_TRANSACTION`.
   - This script is only populated after the `start-private-network.sh` script has been completed successfully.
 - The `Dockerfile` compiles `cast` and `forge`.
@@ -135,8 +172,3 @@ Here are a few notes to keep in mind. I **highly recommend** reading every bulle
 
 - If you want to utilize Prometheus and Grafana. Do the following:
   - Within your local `vulcanize/ops` repo, update the following file `metrics/etc/prometheus.yml`. Update `[localhost:6060]` —> `go-ethereum:6060`.
-
-## `ipld-eth-server` Specific
-
-- Currently, neither the `local` nor the `latest` docker-compose file is working.
-- I am utilizing the following `start-up-files/ipld-eth-server/chain.json`, not the one specified in the `ipld-eth-server` repository. The reason is that the `start-up-files/ipld-eth-server/chain.json` file matches the `start-up-files/go-ethereum/genesis.json`.

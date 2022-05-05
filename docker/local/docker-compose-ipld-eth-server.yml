@@ -33,7 +33,7 @@ services:
     depends_on:
       - go-ethereum
     build:
-      context: ${vulcanize_ipld_eth_server}test/contract
+      context: ${vulcanize_ipld_eth_server}/test/contract
       args:
         ETH_ADDR: "http://go-ethereum:8545"
     environment:
