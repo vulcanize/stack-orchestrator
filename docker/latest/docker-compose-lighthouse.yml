@@ -6,7 +6,7 @@ services:
       context: ../../
       dockerfile: ./docker/latest/lighthouse.Dockerfile
     environment:
-      - NETWORK=prater
+      - NETWORK=mainnet
     volumes:
       - lighthouse_db:/root/.lighthouse
     ports:

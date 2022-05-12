@@ -1,4 +1,3 @@
-- [Foundry README](#foundry-readme)
 - [Overview](#overview)
 - [Building The Stack](#building-the-stack)
   - [Quick Start](#quick-start)
