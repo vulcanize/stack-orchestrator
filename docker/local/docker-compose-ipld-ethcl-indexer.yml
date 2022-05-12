@@ -19,4 +19,4 @@ services:
       BC_PORT: 5052
       LOG_LEVEL: "info"
       CAPTURE_MODE: ${ethcl_capture_mode}
-      SKIP_SYNC: "true"
+      SKIP_SYNC: ${ethcl_skip_sync}
