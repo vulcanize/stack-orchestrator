@@ -20,3 +20,4 @@ services:
       LOG_LEVEL: "info"
       CAPTURE_MODE: ${ethcl_capture_mode}
       SKIP_SYNC: ${ethcl_skip_sync}
+      KNOWN_GAP_INCREMENT: ${ethcl_known_gap_increment}
