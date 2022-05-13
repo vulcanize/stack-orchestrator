@@ -18,3 +18,5 @@ eth_http_path=''
 watched_addres_gap_filler_enabled=false
 watched_addres_gap_filler_interval=5
 ethcl_capture_mode=boot
+ethcl_skip_sync=true
+ethcl_known_gap_increment=1000000
