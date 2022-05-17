@@ -3,7 +3,7 @@ services:
   ipld-ethcl-indexer:
     restart: unless-stopped
     depends_on:
-      - ipld-eth-db
+      - ipld-ethcl-db
       - lighthouse
     build:
       context: ${vulcanize_ipld_ethcl_indexer}
