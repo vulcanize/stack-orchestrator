@@ -10,7 +10,7 @@ services:
       dockerfile: ./Dockerfile
     environment:
       DB_NAME: "vulcanize_testing"
-      DB_ADDRESS: "ipld-eth-db"
+      DB_ADDRESS: "ipld-ethcl-db"
       DB_PORT: 5432
       DB_USER: "vdbm"
       DB_DRIVER: "PGX"
