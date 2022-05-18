@@ -1,0 +1,21 @@
+version: "3.2"
+services:
+  ipld-ethcl-indexer:
+    restart: unless-stopped
+    depends_on:
+      - ipld-ethcl-db
+      - lighthouse
+    image: vulcanize/ipld-ethcl-indexer:v0.1.0-ipld-ethcl-indexer-v3
+    environment:
+      DB_NAME: "vulcanize_testing"
+      DB_ADDRESS: "ipld-ethcl-db"
+      DB_PORT: 5432
+      DB_USER: "vdbm"
+      DB_DRIVER: "PGX"
+      DB_PASSWORD: "password"
+      BC_ADDRESS: "lighthouse"
+      BC_PORT: 5052
+      LOG_LEVEL: "info"
+      CAPTURE_MODE: ${ethcl_capture_mode}
+      SKIP_SYNC: ${ethcl_skip_sync}
+      KNOWN_GAP_INCREMENT: ${ethcl_known_gap_increment}

@@ -11,6 +11,8 @@
 - [Additional Notes](#additional-notes)
   - [Geth Specific](#geth-specific)
   - [Monitoring Specific](#monitoring-specific)
+- [Known Issues](#known-issues)
+  - [SELinux Issues With Filepath](#selinux-issues-with-filepath)
 
 <small><i><a href='http://ecotrust-canada.github.io/markdown-toc/'>Table of contents generated with markdown-toc</a></i></small>
 
@@ -171,3 +173,13 @@ Here are a few notes to keep in mind. I **highly recommend** reading every bulle
 
 - If you want to utilize Prometheus and Grafana. Do the following:
   - Within your local `vulcanize/ops` repo, update the following file `metrics/etc/prometheus.yml`. Update `[localhost:6060]` —> `go-ethereum:6060`.
+
+# Known Issues
+
+## SELinux Issues With Filepath
+
+Users might notice issues when attempting to build `ipld-eth-server`. If you are unable to build the application due to file permissions, it can be related to absolute path v relative path. Users might need to update local configurations, or update SELinux with the following command:
+
+```
+sudo su -c "setenforce 0"
+```
