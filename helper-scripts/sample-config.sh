@@ -9,6 +9,7 @@ vulcanize_ipld_ethcl_indexer=${vulcanize_repo_base_dir}/ipld-ethcl-indexer
 vulcanize_go_ethereum=${vulcanize_repo_base_dir}/go-ethereum
 vulcanize_ipld_eth_server=${vulcanize_repo_base_dir}/ipld-eth-server
 vulcanize_ipld_ethcl_db=${vulcanize_repo_base_dir}/ipld-ethcl-db
+vulcanize_eth_statediff_fill_service=${vulcanize_repo_base_dir}/eth-statediff-fill-service
 
 # USE SINGLE QUOTES ONLY!!!!!!
 extra_args='--metrics --metrics.expensive --metrics.addr 0.0.0.0 --metrics.port 6060'
