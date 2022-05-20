@@ -29,18 +29,6 @@ services:
     ports:
       - "127.0.0.1:8081:8081"
 
-  contract:
-    depends_on:
-      - go-ethereum
-    build:
-      context: ${vulcanize_ipld_eth_server}/test/contract
-      args:
-        ETH_ADDR: "http://go-ethereum:8545"
-    environment:
-      ETH_ADDR: "http://go-ethereum:8545"
-    ports:
-      - "127.0.0.1:3000:3000"
-
   graphql:
     restart: unless-stopped
     depends_on:

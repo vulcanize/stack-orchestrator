@@ -1,0 +1,13 @@
+version: "3.2"
+services:
+  contract:
+    depends_on:
+      - go-ethereum
+    build:
+      context: ${vulcanize_test_contract}
+      args:
+        ETH_ADDR: "http://go-ethereum:8545"
+    environment:
+      ETH_ADDR: "http://go-ethereum:8545"
+    ports:
+      - "127.0.0.1:3000:3000"
