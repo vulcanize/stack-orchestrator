@@ -20,8 +20,8 @@ services:
       ETH_FORWARD_ETH_CALLS: $eth_forward_eth_calls
       ETH_PROXY_ON_ERROR: $eth_proxy_on_error
       ETH_HTTP_PATH: $eth_http_path
-      WATCHED_ADDRESS_GAP_FILLER_ENABLED: $watched_addres_gap_filler_enabled
-      WATCHED_ADDRESS_GAP_FILLER_INTERVAL: $watched_addres_gap_filler_interval
+      WATCHED_ADDRESS_GAP_FILLER_ENABLED: $watched_address_gap_filler_enabled
+      WATCHED_ADDRESS_GAP_FILLER_INTERVAL: $watched_address_gap_filler_interval
     volumes:
       - type: bind
         source: ../../start-up-files/ipld-eth-server/chain.json
