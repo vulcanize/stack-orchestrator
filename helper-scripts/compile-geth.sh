@@ -4,16 +4,16 @@ set -e
 showHelp() {
 # `cat << EOF` This means that cat should stop reading when EOF is detected
 cat << EOF
-Usage: ./wrapper.sh -e <compiler-env>
-Spin up Foundry with Geth and a database.
+Usage: ./compile-geth.sh -e local|docker|remote -u username -n hostname -p ../local-config.sh
+Compile geth
 
 -h,         Display help
 
 -e,         Should we compile on your "local" machine or in "docker" or on a "remote" server
 
--v,         Should we "remove" the volume when bringind the image down or "keep" it?
-
 -u,         What username should we use for the remote build?
+
+-n,         What is the hostname for the remote build?
 
 -p,          Path to config.sh file.
 
