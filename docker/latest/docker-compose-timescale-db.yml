@@ -1,0 +1,14 @@
+version: "3.2"
+
+services:
+  access-node:
+    image: timescale/timescaledb:latest-pg14
+    restart: always
+    container_name: access-node
+    command: ["postgres", "-c", "log_statement=all"]
+    environment:
+      POSTGRES_USER: "vdbm"
+      POSTGRES_DB: "vulcanize_testing_v4"
+      POSTGRES_PASSWORD: "password"
+    ports:
+      - "127.0.0.1:8066:5432"
