@@ -1,0 +1,15 @@
+version: "3.2"
+services:
+  ipld-eth-db-migration:
+    restart: always
+    depends_on:
+      - access-node
+    build:
+      context: ${vulcanize_ipld_eth_db}/
+      dockerfile: db/Dockerfile
+    environment:
+      DATABASE_USER: vdbm
+      DATABASE_PASSWORD: password
+      DATABASE_HOSTNAME: access-node
+      DATABASE_PORT: 5432
+      DATABASE_NAME: vulcanize_testing_v4
