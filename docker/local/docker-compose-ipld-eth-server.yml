@@ -2,6 +2,8 @@ version: "3.2"
 services:
   ipld-eth-server:
     restart: unless-stopped
+    depends_on:
+      - ${ipld_eth_server_db_dependency}
     build:
       context: ${vulcanize_ipld_eth_server}
       dockerfile: ./Dockerfile
@@ -11,8 +13,8 @@ services:
       ETH_SERVER_HTTPPATH: 0.0.0.0:8081
       VDB_COMMAND: "serve"
       ETH_CHAIN_CONFIG: "/tmp/chain.json"
-      DATABASE_NAME: "vulcanize_testing"
-      DATABASE_HOSTNAME: "ipld-eth-db"
+      DATABASE_NAME: ${connecting_db_name}
+      DATABASE_HOSTNAME: ${ipld_eth_server_db_dependency}
       DATABASE_PORT: 5432
       DATABASE_USER: "vdbm"
       DATABASE_PASSWORD: "password"
@@ -32,14 +34,14 @@ services:
   graphql:
     restart: unless-stopped
     depends_on:
-      - ipld-eth-db
+      - ${ipld_eth_server_db_dependency}
     image: vulcanize/postgraphile:v1.0.1
     environment:
-      - PG_HOST=ipld-eth-db
-      - PG_PORT=5432
-      - PG_DATABASE=vulcanize_testing
-      - PG_USER=vdbm
-      - PG_PASSWORD=password
-      - SCHEMA=public,eth
+      PG_HOST: ${ipld_eth_server_db_dependency}
+      PG_PORT: 5432
+      PG_DATABASE: ${connecting_db_name}
+      PG_USER: vdbm
+      PG_PASSWORD: password
+      SCHEMA: public,eth
     ports:
       - "127.0.0.1:5000:5000"

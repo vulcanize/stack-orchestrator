@@ -4,14 +4,14 @@ services:
   go-ethereum:
     restart: unless-stopped
     depends_on:
-      - ipld-eth-db
+      - ${go_ethereum_db_dependency}
     build:
       context: ../../
       dockerfile: ./docker/local/go-ethereum.Dockerfile
     environment:
       DB_USER: vdbm
-      DB_NAME: vulcanize_testing
-      DB_HOST: ipld-eth-db
+      DB_NAME: ${connecting_db_name}
+      DB_HOST: ${go_ethereum_db_dependency}
       DB_PORT: 5432
       DB_PASSWORD: password
       DB_WRITE: ${db_write}
