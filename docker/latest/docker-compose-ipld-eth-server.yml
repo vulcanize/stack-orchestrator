@@ -3,7 +3,7 @@ services:
   ipld-eth-server:
     restart: unless-stopped
     depends_on:
-      - ${ipld_eth_server_db_dependency}
+      - ipld-eth-db
     image: vulcanize/ipld-eth-server:v2.0.0
     environment:
       IPLD_SERVER_GRAPHQL: "true"
@@ -12,7 +12,7 @@ services:
       VDB_COMMAND: "serve"
       ETH_CHAIN_CONFIG: "/tmp/chain.json"
       DATABASE_NAME: ${connecting_db_name}
-      DATABASE_HOSTNAME: ${ipld_eth_server_db_dependency}
+      DATABASE_HOSTNAME: ipld-eth-db
       DATABASE_PORT: 5432
       DATABASE_USER: "vdbm"
       DATABASE_PASSWORD: "password"
@@ -32,10 +32,10 @@ services:
   graphql:
     restart: unless-stopped
     depends_on:
-      - ${ipld_eth_server_db_dependency}
+      - ipld-eth-db
     image: vulcanize/postgraphile:v1.0.1
     environment:
-      PG_HOST: ${ipld_eth_server_db_dependency}
+      PG_HOST: ipld-eth-db
       PG_PORT: 5432
       PG_DATABASE: ${connecting_db_name}
       PG_USER: vdbm
