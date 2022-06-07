@@ -25,9 +25,3 @@ watched_address_gap_filler_interval=5
 ethcl_capture_mode=boot
 ethcl_skip_sync=true
 ethcl_known_gap_increment=1000000
-
-# Allow us to use the same configs for v3 and v4 db
-ipld_eth_server_db_dependency=access-node
-go_ethereum_db_dependency=access-node
-
-connecting_db_name=vulcanize_testing_v4

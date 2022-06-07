@@ -13,8 +13,8 @@ services:
       ETH_SERVER_HTTPPATH: 0.0.0.0:8081
       VDB_COMMAND: "serve"
       ETH_CHAIN_CONFIG: "/tmp/chain.json"
-      DATABASE_NAME: ${connecting_db_name}
-      DATABASE_HOSTNAME: ${ipld_eth_server_db_dependency}
+      DATABASE_NAME: vulcanize_testing
+      DATABASE_HOSTNAME: ipld-eth-db
       DATABASE_PORT: 5432
       DATABASE_USER: "vdbm"
       DATABASE_PASSWORD: "password"
@@ -39,7 +39,7 @@ services:
     environment:
       PG_HOST: ${ipld_eth_server_db_dependency}
       PG_PORT: 5432
-      PG_DATABASE: ${connecting_db_name}
+      PG_DATABASE: vulcanize_testing
       PG_USER: vdbm
       PG_PASSWORD: password
       SCHEMA: public,eth
