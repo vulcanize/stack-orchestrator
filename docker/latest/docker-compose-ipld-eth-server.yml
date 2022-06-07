@@ -2,6 +2,8 @@ version: "3.2"
 services:
   ipld-eth-server:
     restart: unless-stopped
+    depends_on:
+      - ipld-eth-db
     image: vulcanize/ipld-eth-server:v2.0.0
     environment:
       IPLD_SERVER_GRAPHQL: "true"

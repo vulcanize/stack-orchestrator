@@ -2,6 +2,8 @@ version: "3.2"
 services:
   ipld-eth-server:
     restart: unless-stopped
+    depends_on:
+      - ipld-eth-db
     build:
       context: ${vulcanize_ipld_eth_server}
       dockerfile: ./Dockerfile
