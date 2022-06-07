@@ -3,7 +3,7 @@ services:
   ipld-eth-server:
     restart: unless-stopped
     depends_on:
-      - ${ipld_eth_server_db_dependency}
+      - ipld-eth-db
     build:
       context: ${vulcanize_ipld_eth_server}
       dockerfile: ./Dockerfile
@@ -34,10 +34,10 @@ services:
   graphql:
     restart: unless-stopped
     depends_on:
-      - ${ipld_eth_server_db_dependency}
+      - ipld-eth-db
     image: vulcanize/postgraphile:v1.0.1
     environment:
-      PG_HOST: ${ipld_eth_server_db_dependency}
+      PG_HOST: ipld-eth-db
       PG_PORT: 5432
       PG_DATABASE: vulcanize_testing
       PG_USER: vdbm
