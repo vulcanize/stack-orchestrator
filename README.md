@@ -141,6 +141,7 @@ If you want to utilize `stack-orchestrator` within your CI/CD, you will do it as
 2.  Create a `docker-compose` file for `local` and `latest` within the `docker/` directory in `stack-orchestrator`.
 3.  Create a Github Action that is triggered by `pull_request` and `workflow_dispatch`.
     1.  You must merge this file into `master/main` before being able to use it. `workflow_dispatch` will not work unless it is in `master/main` first. This is a design fault.
+4.  When referencing the stack-orchestrator repository, use a commit hash instead of using a branch name.
 
 ### Case Study: `ipld-ethcl-indexer`.
 
