@@ -4,7 +4,7 @@ services:
     restart: unless-stopped
     depends_on:
       - ipld-eth-db
-    image: vulcanize/ipld-eth-server:v2.0.0
+    image: vulcanize/ipld-eth-server:v3.2.2
     environment:
       IPLD_SERVER_GRAPHQL: "true"
       IPLD_POSTGRAPHILEPATH: http://graphql:5000
@@ -20,8 +20,6 @@ services:
       ETH_FORWARD_ETH_CALLS: $eth_forward_eth_calls
       ETH_PROXY_ON_ERROR: $eth_proxy_on_error
       ETH_HTTP_PATH: $eth_http_path
-      WATCHED_ADDRESS_GAP_FILLER_ENABLED: $watched_address_gap_filler_enabled
-      WATCHED_ADDRESS_GAP_FILLER_INTERVAL: $watched_address_gap_filler_interval
     volumes:
       - type: bind
         source: ../../start-up-files/ipld-eth-server/chain.json
