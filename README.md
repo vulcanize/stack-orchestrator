@@ -7,7 +7,7 @@
     - [`helper-scripts/wrapper.sh`](#-helper-scripts-wrappersh-)
     - [Utilizing Multiple `docker-compose-*` Files Together](#utilizing-multiple--docker-compose----files-together)
   - [Utilizing CI/CD](#utilizing-ci-cd)
-    - [Case Study: `ipld-ethcl-indexer`.](#case-study---ipld-ethcl-indexer-)
+    - [Case Study: `ipld-eth-beacon-indexer`.](#case-study---ipld-eth-beacon-indexer-)
 - [Additional Notes](#additional-notes)
   - [Geth Specific](#geth-specific)
   - [Monitoring Specific](#monitoring-specific)
@@ -27,7 +27,7 @@ The current applications that we can build using `stack-orchestrator` are:
 - `ipld-eth-db`.
 - `prometheus`.
 - `grafana`.
-- `ipld-ethcl-indexer`.
+- `ipld-eth-beacon-indexer`.
 - `ipld-eth-server`.
 
 # Building The Stack
@@ -90,7 +90,7 @@ cd stack-orchestrator/helper-scripts
   -d ../docker/latest/docker-compose-db.yml \
   -d ../docker/local/docker-compose-ipld-eth-server.yml \
   -d ../docker/latest/docker-compose-lighthouse.yml \
-  -d ../docker/local/docker-compose-ipld-ethcl-indexer.yml \
+  -d ../docker/local/docker-compose-ipld-eth-beacon-indexer.yml \
   -d ../docker/local/docker-compose-go-ethereum.yml \
   -v remove \
   -p ../config.sh
@@ -143,13 +143,13 @@ If you want to utilize `stack-orchestrator` within your CI/CD, you will do it as
     1.  You must merge this file into `master/main` before being able to use it. `workflow_dispatch` will not work unless it is in `master/main` first. This is a design fault.
 4.  When referencing the stack-orchestrator repository, use a commit hash instead of using a branch name.
 
-### Case Study: `ipld-ethcl-indexer`.
+### Case Study: `ipld-eth-beacon-indexer`.
 
-I followed this process for `ipld-ethcl-indexer`. Here are a few key files.
+I followed this process for `ipld-eth-beacon-indexer`. Here are a few key files.
 
-1.  [`vulcanize/ipld-ethcl-indexer:Dockerfile`](https://github.com/vulcanize/ipld-ethcl-indexer/blob/main/Dockerfile) - Compiles and starts the application
-2.  [`vulcanize/stack-orchestrator:docker/local/docker-compose-ipld-ethcl-indexer.yml`](https://github.com/vulcanize/stack-orchestrator/blob/main/docker/local/docker-compose-ipld-ethcl-indexer.yml) - A `docker-compose` file to start the container.
-3.  [`vulcanize/ipld-ethcl-indexer:.github/workflows/on-pr.yml`](https://github.com/vulcanize/ipld-ethcl-indexer/blob/main/.github/workflows/on-pr.yml) - Automatically triggered on `pull_request`. If users ever need to reference a specific branch for `ipld-eth-db` or `stack-orchestrator`, they can easily do so in the `env` variable.
+1.  [`vulcanize/ipld-eth-beacon-indexer:Dockerfile`](https://github.com/vulcanize/ipld-eth-beacon-indexer/blob/main/Dockerfile) - Compiles and starts the application
+2.  [`vulcanize/stack-orchestrator:docker/local/docker-compose-ipld-eth-beacon-indexer.yml`](https://github.com/vulcanize/stack-orchestrator/blob/main/docker/local/docker-compose-ipld-eth-beacon-indexer.yml) - A `docker-compose` file to start the container.
+3.  [`vulcanize/ipld-eth-beacon-indexer:.github/workflows/on-pr.yml`](https://github.com/vulcanize/ipld-eth-beacon-indexer/blob/main/.github/workflows/on-pr.yml) - Automatically triggered on `pull_request`. If users ever need to reference a specific branch for `ipld-eth-db` or `stack-orchestrator`, they can easily do so in the `env` variable.
     1.  You can also easily run this GHA manually and provide input parameters.
 
 # Additional Notes

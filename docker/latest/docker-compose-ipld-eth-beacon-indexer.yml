@@ -1,0 +1,21 @@
+version: "3.2"
+services:
+  ipld-eth-beacon-indexer:
+    restart: unless-stopped
+    depends_on:
+      - ipld-eth-beacon-db
+      - lighthouse
+    image: vulcanize/ipld-eth-beacon-indexer:v0.1.0-ipld-eth-beacon-indexer-v3
+    environment:
+      DB_NAME: "vulcanize_testing"
+      DB_ADDRESS: "ipld-eth-beacon-db"
+      DB_PORT: 5432
+      DB_USER: "vdbm"
+      DB_DRIVER: "PGX"
+      DB_PASSWORD: "password"
+      BC_ADDRESS: "lighthouse"
+      BC_PORT: 5052
+      LOG_LEVEL: "info"
+      CAPTURE_MODE: ${eth_beacon_capture_mode}
+      SKIP_SYNC: ${eth_beacon_skip_sync}
+      KNOWN_GAP_INCREMENT: ${eth_beacon_known_gap_increment}

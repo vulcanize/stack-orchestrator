@@ -1,16 +1,16 @@
 version: "3.2"
 services:
-  ipld-ethcl-indexer:
+  ipld-eth-beacon-indexer:
     restart: unless-stopped
     depends_on:
-      - ipld-ethcl-db
+      - ipld-eth-beacon-db
       - lighthouse
     build:
-      context: ${vulcanize_ipld_ethcl_indexer}
+      context: ${vulcanize_ipld_eth_beacon_indexer}
       dockerfile: ./Dockerfile
     environment:
       DB_NAME: "vulcanize_testing"
-      DB_ADDRESS: "ipld-ethcl-db"
+      DB_ADDRESS: "ipld-eth-beacon-db"
       DB_PORT: 5432
       DB_USER: "vdbm"
       DB_DRIVER: "PGX"
@@ -18,6 +18,6 @@ services:
       BC_ADDRESS: "lighthouse"
       BC_PORT: 5052
       LOG_LEVEL: "info"
-      CAPTURE_MODE: ${ethcl_capture_mode}
-      SKIP_SYNC: ${ethcl_skip_sync}
-      KNOWN_GAP_INCREMENT: ${ethcl_known_gap_increment}
+      CAPTURE_MODE: ${eth_beacon_capture_mode}
+      SKIP_SYNC: ${eth_beacon_skip_sync}
+      KNOWN_GAP_INCREMENT: ${eth_beacon_known_gap_increment}

@@ -5,10 +5,10 @@
 vulcanize_ops=${vulcanize_repo_base_dir}/ops
 vulcanize_stack_orchestrator=${vulcanize_repo_base_dir}/stack-orchestrator
 vulcanize_ipld_eth_db=${vulcanize_repo_base_dir}/ipld-eth-db
-vulcanize_ipld_ethcl_indexer=${vulcanize_repo_base_dir}/ipld-ethcl-indexer
+vulcanize_ipld_eth_beacon_indexer=${vulcanize_repo_base_dir}/ipld-eth-beacon-indexer
 vulcanize_go_ethereum=${vulcanize_repo_base_dir}/go-ethereum
 vulcanize_ipld_eth_server=${vulcanize_repo_base_dir}/ipld-eth-server
-vulcanize_ipld_ethcl_db=${vulcanize_repo_base_dir}/ipld-ethcl-db
+vulcanize_ipld_eth_beacon_db=${vulcanize_repo_base_dir}/ipld-eth-beacon-db
 vulcanize_eth_statediff_fill_service=${vulcanize_repo_base_dir}/eth-statediff-fill-service
 vulcanize_test_contract=${vulcanize_repo_base_dir}/ipld-eth-db-validator/test/contract
 
@@ -22,6 +22,6 @@ eth_http_path=''
 watched_address_gap_filler_enabled=false
 watched_address_gap_filler_interval=5
 
-ethcl_capture_mode=boot
-ethcl_skip_sync=true
-ethcl_known_gap_increment=1000000
+eth_beacon_capture_mode=boot
+eth_beacon_skip_sync=true
+eth_beacon_known_gap_increment=1000000
