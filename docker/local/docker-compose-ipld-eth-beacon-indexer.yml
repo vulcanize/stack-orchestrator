@@ -1,0 +1,16 @@
+version: "3.2"
+services:
+  ipld-eth-beacon-indexer:
+    restart: unless-stopped
+    depends_on:
+      - ipld-eth-beacon-db
+      - lighthouse
+    build:
+      context: ${vulcanize_ipld_eth_beacon_indexer}
+      dockerfile: ./Dockerfile
+    environment:
+      CAPTURE_MODE: ${eth_beacon_capture_mode}
+    volumes:
+      - type: bind
+        source: ${eth_beacon_config_file}
+        target: /root/ipld-eth-beacon-config.json

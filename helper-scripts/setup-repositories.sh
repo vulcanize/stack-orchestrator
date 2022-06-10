@@ -63,9 +63,9 @@ git clone ${prefix}vulcanize/ipld-eth-server.git $vulcanize_ipld_eth_server
 
 
 # Might fail if you don't have access to the repository.
-git clone ${prefix}vulcanize/ipld-ethcl-indexer.git $vulcanize_ipld_ethcl_indexer
+git clone ${prefix}vulcanize/ipld-eth-beacon-indexer.git $vulcanize_ipld_eth_beacon_indexer
 if [ $? -ne 0 ]; then
-    echo -e "${RED} You don't have access to vulcanize/ipld-ethcl-indexer.git${NC}"
+    echo -e "${RED} You don't have access to vulcanize/ipld-eth-beacon-indexer.git${NC}"
 fi
 
 
