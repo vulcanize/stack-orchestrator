@@ -1,18 +1,17 @@
 version: "3.2"
 services:
-  ipld-ethcl-db:
+  ipld-eth-beacon-db:
     restart: always
-    build:
-      context: ${vulcanize_ipld_ethcl_db}/
+    image: vulcanize/ipld-eth-beacon-db:v0.1.0
     environment:
       POSTGRES_USER: vdbm
       POSTGRES_DB: vulcanize_testing
       POSTGRES_PASSWORD: password
     volumes:
-      - vdb_db_ethcl_db:/var/lib/postgresql/data
+      - vdb_db_eth-beacon_db:/var/lib/postgresql/data
     ports:
       - "127.0.0.1:8076:5432"
     command: ["postgres", "-c", "log_statement=all"]
 
 volumes:
-  vdb_db_ethcl_db:
+  vdb_db_eth-beacon_db:
