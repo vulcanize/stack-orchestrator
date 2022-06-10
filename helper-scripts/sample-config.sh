@@ -25,3 +25,4 @@ watched_address_gap_filler_interval=5
 eth_beacon_capture_mode=boot
 # provide only the file name under the ipld-eth-beacon-indexer/ repo.
 eth_beacon_config_file=${vulcanize_repo_base_dir}/ipld-eth-beacon-indexer/config/cicd/boot.ipld-eth-beacon-config.json
+
