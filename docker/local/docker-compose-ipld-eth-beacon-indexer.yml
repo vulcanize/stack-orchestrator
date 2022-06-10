@@ -9,15 +9,8 @@ services:
       context: ${vulcanize_ipld_eth_beacon_indexer}
       dockerfile: ./Dockerfile
     environment:
-      DB_NAME: "vulcanize_testing"
-      DB_ADDRESS: "ipld-eth-beacon-db"
-      DB_PORT: 5432
-      DB_USER: "vdbm"
-      DB_DRIVER: "PGX"
-      DB_PASSWORD: "password"
-      BC_ADDRESS: "lighthouse"
-      BC_PORT: 5052
-      LOG_LEVEL: "info"
       CAPTURE_MODE: ${eth_beacon_capture_mode}
-      SKIP_SYNC: ${eth_beacon_skip_sync}
-      KNOWN_GAP_INCREMENT: ${eth_beacon_known_gap_increment}
+    volumes:
+      - type: bind
+        source: ${eth_beacon_config_file}
+        target: /root/ipld-eth-beacon-config.json
