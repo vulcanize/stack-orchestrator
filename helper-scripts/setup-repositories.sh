@@ -15,8 +15,6 @@ Setup repositories that can be built using the stack-orchestrator repository.
 
 -c,                 Path to the configuration file that specifies to location of the output directories. It is recommended to use ../config.sh
 
--b,                 The base directory for the config file. Recommended that you use ~/vulcanize
-
 -p,                 The network protocol to use, https or ssh.
 
 EOF
@@ -24,7 +22,6 @@ EOF
 }
 
 c=../config.sh
-b=~/vulcanize
 p=https
 GREEN='\033[0;32m'
 RED='\033[0;31m'
@@ -34,9 +31,6 @@ while getopts ":c:b:p:" o; do
         c)
             c=${OPTARG}
             [[ -f "$c" ]] || usage
-            ;;
-        b)
-            b=${OPTARG}
             ;;
         p)
             p=${OPTARG}
@@ -68,6 +62,9 @@ git clone ${prefix}vulcanize/go-ethereum.git $vulcanize_go_ethereum
 git clone ${prefix}vulcanize/ipld-eth-server.git $vulcanize_ipld_eth_server
 git clone ${prefix}vulcanize/eth-statediff-fill-service.git $vulcanize_eth_statediff_fill_service
 git clone ${prefix}vulcanize/ipld-eth-db-validator.git ${vulcanize_repo_base_dir}/ipld-eth-db-validator
+
+# Statediff fill
+# Validator
 
 
 # Might fail if you don't have access to the repository.
