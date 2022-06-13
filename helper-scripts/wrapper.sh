@@ -21,6 +21,12 @@ Spin up Foundry with Geth and a database.
 
 -n,         What is the hostname for the remote build?
 
+-f          Should we build the full stack? "true" or "false"
+
+-l          If we are building the full stack, should we build using local repositories, or use latest images wherever possible? "local" or "latest".
+
+-s          If we are building the full stack, specify the DB version youd like: "v3" or "v4".
+
 -p,         Path to config.sh file.
 
 EOF
@@ -31,12 +37,15 @@ exit 1
 e="local"
 v="keep"
 u="abdul"
-n="alabaster.lan.vdb.to"
+n="alabaster.vdb.to"
 p="../config.sh"
+f="false"
+l="remote"
+s="v3"
 GREEN='\033[0;32m'
 RED='\033[0;31m'
 NC='\033[0m'
-while getopts ":e:d:v:u:n:p:" o; do
+while getopts ":e:d:v:u:n:p:f:l:s:" o; do
     case "${o}" in
         e)
             e=${OPTARG}
@@ -59,6 +68,18 @@ while getopts ":e:d:v:u:n:p:" o; do
             p=${OPTARG}
             [[ -f "$p" ]] || showHelp
             ;;
+        f)
+            f=${OPTARG}
+            [ "$f" = "true" -o "$f" = "false" ] || showHelp
+            ;;
+        s)
+            s=${OPTARG}
+            [ "$s" = "v3" -o "$s" = "v4" ] || showHelp
+            ;;
+        l)
+            l=${OPTARG}
+            [ "$l" = "local" -o "$l" = "latest" ] || showHelp
+            ;;
         *)
             showHelp
             ;;
@@ -75,6 +96,47 @@ echo -e "${GREEN} v=${v} ${NC}"
 echo -e "${GREEN} u=${u} ${NC}"
 echo -e "${GREEN} n=${n} ${NC}"
 echo -e "${GREEN} p=${p} ${NC}"
+echo -e "${GREEN} p=${p} ${NC}"
+
+if [ "$f" == "true" ]; then
+    e="docker"
+    latestPath="../docker/latest"
+    localPath="../docker/local"
+    if [ "$l" == "local" ]; then
+        composeFiles=("${latestPath}/docker-compose-lighthouse.yml"
+                      "${localPath}/docker-compose-ipld-eth-beacon-db.yml"
+                      "${localPath}/docker-compose-ipld-eth-beacon-indexer.yml"
+                      "${localPath}/docker-compose-ipld-eth-server.yml"
+                      "${localPath}/docker-compose-eth-statediff-fill-service.yml"
+                      "${localPath}/docker-compose-go-ethereum.yml"
+                      "${localPath}/docker-compose-contract.yml"
+                     )
+    elif [ "$l" == "latest" ]; then
+        composeFiles=("${latestPath}/docker-compose-lighthouse.yml"
+                      "${latestPath}/docker-compose-ipld-eth-beacon-db.yml"
+                      "${latestPath}/docker-compose-ipld-eth-beacon-indexer.yml"
+                      "${latestPath}/docker-compose-ipld-eth-server.yml"
+                      "${localPath}/docker-compose-eth-statediff-fill-service.yml"
+                      "${localPath}/docker-compose-go-ethereum.yml"
+                      "${localPath}/docker-compose-contract.yml"
+                      )
+    fi
+
+    if [ "$s" == "v3" ] && [ "$l" == "latest" ]; then
+    composeFiles+=("${latestPath}/docker-compose-db.yml")
+
+    elif [ "$s" == "v3" ] && [ "$l" == "local" ]; then
+    composeFiles+=("${localPath}/docker-compose-db.yml")
+
+    elif [ "$s" == "v4" ] && [ "$l" == "latest" ]; then
+    composeFiles+=("${latestPath}/docker-compose-db-sharding.yml")
+
+    elif [ "$s" == "v4" ] && [ "$l" == "local" ]; then
+    composeFiles+=("${localPath}/docker-compose-db-sharding.yml")
+
+    fi
+fi
+
 
 if [ "$e" != "skip" ]; then
     ./compile-geth.sh -e $e -n $n -u $u -p $p

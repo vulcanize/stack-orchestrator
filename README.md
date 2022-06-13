@@ -97,6 +97,15 @@ cd stack-orchestrator/helper-scripts
 
 ```
 
+or
+
+```bash
+./wrapper.sh -f true \
+  -s v3 \
+  -l latest \
+  -p ../config.sh
+```
+
 7.  When you want to clean up your local environment, hit `ctrl + c`. The bash script will remove all containers and any volumes created (if you specify `v remove`).
 
 ## Components

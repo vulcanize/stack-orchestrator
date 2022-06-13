@@ -1,10 +1,11 @@
-version: '3.2'
+version: "3.2"
 
 services:
   migrations:
     restart: on-failure
     depends_on:
-      - ipld-eth-db
+      ipld-eth-db:
+        condition: service_healthy
     image: vulcanize/ipld-eth-db:v4.1.1-alpha
     environment:
       DATABASE_USER: "vdbm"
@@ -21,5 +22,10 @@ services:
       POSTGRES_USER: "vdbm"
       POSTGRES_DB: "vulcanize_testing"
       POSTGRES_PASSWORD: "password"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
     ports:
       - "127.0.0.1:8077:5432"

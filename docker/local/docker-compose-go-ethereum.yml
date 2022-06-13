@@ -4,10 +4,16 @@ services:
   go-ethereum:
     restart: unless-stopped
     depends_on:
-      - ipld-eth-db
+      ipld-eth-db:
+        condition: service_healthy
     build:
       context: ../../
       dockerfile: ./docker/local/go-ethereum.Dockerfile
+    healthcheck:
+      test: ["CMD", "nc", "-v", "localhost", "8545"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
     environment:
       DB_USER: vdbm
       DB_NAME: vulcanize_testing
