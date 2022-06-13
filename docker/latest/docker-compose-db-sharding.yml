@@ -23,7 +23,7 @@ services:
       POSTGRES_DB: "vulcanize_testing"
       POSTGRES_PASSWORD: "password"
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready"]
+      test: ["CMD", "nc", "-v", "localhost", "5432"]
       interval: 5s
       timeout: 3s
       retries: 5
