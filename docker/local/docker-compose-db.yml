@@ -11,7 +11,7 @@ services:
     ports:
       - "127.0.0.1:8077:5432"
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready"]
+      test: ["CMD", "nc", "-v", "localhost", "5432"]
       interval: 5s
       timeout: 3s
       retries: 5
