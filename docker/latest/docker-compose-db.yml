@@ -7,6 +7,11 @@ services:
       POSTGRES_USER: "vdbm"
       POSTGRES_DB: "vulcanize_testing"
       POSTGRES_PASSWORD: "password"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
     ports:
       - "127.0.0.1:8077:5432"
     command: ["postgres", "-c", "log_statement=all"]

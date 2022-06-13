@@ -2,7 +2,8 @@ version: "3.2"
 services:
   contract:
     depends_on:
-      - go-ethereum
+      go-ethereum:
+        condition: service_healthy
     build:
       context: ${vulcanize_test_contract}
       args:

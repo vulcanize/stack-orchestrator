@@ -3,7 +3,8 @@ services:
   ipld-eth-server:
     restart: unless-stopped
     depends_on:
-      - ipld-eth-db
+      ipld-eth-db:
+        condition: service_healthy
     build:
       context: ${vulcanize_ipld_eth_server}
       dockerfile: ./Dockerfile
@@ -32,7 +33,8 @@ services:
   graphql:
     restart: unless-stopped
     depends_on:
-      - ipld-eth-db
+      ipld-eth-db:
+        condition: service_healthy
     image: vulcanize/postgraphile:v1.0.1
     environment:
       PG_HOST: ipld-eth-db

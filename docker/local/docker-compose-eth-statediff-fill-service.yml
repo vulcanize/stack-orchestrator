@@ -2,6 +2,9 @@ version: "3.2"
 services:
   eth-statediff-fill-service:
     restart: unless-stopped
+    depends_on:
+      ipld-eth-db:
+        condition: service_healthy
     build:
       context: ${vulcanize_eth_statediff_fill_service}
       dockerfile: ./Dockerfile
