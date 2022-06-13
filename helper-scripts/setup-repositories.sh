@@ -26,7 +26,7 @@ p=https
 GREEN='\033[0;32m'
 RED='\033[0;31m'
 NC='\033[0m'
-while getopts ":c:p:" o; do
+while getopts ":c:b:p:" o; do
     case "${o}" in
         c)
             c=${OPTARG}
@@ -60,6 +60,11 @@ git clone ${prefix}vulcanize/ops.git $vulcanize_ops
 git clone ${prefix}vulcanize/ipld-eth-db.git $vulcanize_ipld_eth_db
 git clone ${prefix}vulcanize/go-ethereum.git $vulcanize_go_ethereum
 git clone ${prefix}vulcanize/ipld-eth-server.git $vulcanize_ipld_eth_server
+git clone ${prefix}vulcanize/eth-statediff-fill-service.git $vulcanize_eth_statediff_fill_service
+git clone ${prefix}vulcanize/ipld-eth-db-validator.git ${vulcanize_repo_base_dir}/ipld-eth-db-validator
+
+# Statediff fill
+# Validator
 
 
 # Might fail if you don't have access to the repository.
@@ -68,6 +73,11 @@ if [ $? -ne 0 ]; then
     echo -e "${RED} You don't have access to vulcanize/ipld-eth-beacon-indexer.git${NC}"
 fi
 
+# Might fail if you don't have access to the repository.
+git clone ${prefix}vulcanize/ipld-eth-beacon-db.git $vulcanize_ipld_eth_beacon_db
+if [ $? -ne 0 ]; then
+    echo -e "${RED} You don't have access to vulcanize/ipld-eth-beacon-db.git${NC}"
+fi
 
 if [[ ! -d $vulcanize_stack_orchestrator ]] ; then
     echo -e "${RED} We highly recommend moving this repository to: $vulcanize_stack_orchestrator${NC}"
