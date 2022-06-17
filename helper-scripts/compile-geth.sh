@@ -87,7 +87,7 @@ if [[ "$e" == "remote" ]]; then
     echo -e "${GREEN}Building geth remotely on $n ${NC}"
     [ -e ${start_path}/geth-linux-amd64 ] && \
         rm ${start_path}/geth-linux-amd64
-    rsync -uavz ./ ${u}@${n}:/home/${u}/go-ethereum-cerc
+    rsync -uavz --delete ./ ${u}@${n}:/home/${u}/go-ethereum-cerc
     ssh ${u}@${n} "cd /home/${u}/go-ethereum-cerc/ ; make geth ; chmod +x build/bin/geth"
     scp ${u}@${n}:/home/${u}/go-ethereum-cerc/build/bin/geth ${start_path}/geth-linux-amd64
 fi
