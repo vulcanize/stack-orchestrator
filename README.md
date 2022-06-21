@@ -40,34 +40,34 @@ If you want to quickly get all the applications mentioned above cloned and runni
 
 1.  Clone the stack-orchestrator repository.
 
-```bash
-# It is recommended that you utilize the directory below.
-mkdir -p ~/vulcanize
-cd ~/vulcanize
-git clone git@github.com:vulcanize/stack-orchestrator.git
+    ```bash
+    # It is recommended that you utilize the directory below.
+    mkdir -p ~/vulcanize
+    cd ~/vulcanize
+    git clone git@github.com:vulcanize/stack-orchestrator.git
 
-```
+    ```
 
 2.  Create a `config.sh` file.
 
-```bash
-cd stack-orchestrator/helper-scripts
-./create-config.sh
-## Optional flags
-# ./create-config.sh -b ~/GitHub/cerc -p ../local-config.sh
+    ```bash
+    cd stack-orchestrator/helper-scripts
+    ./create-config.sh
+    ## Optional flags
+    # ./create-config.sh -b ~/GitHub/cerc -p ../local-config.sh
 
-```
+    ```
 
 3.  Run the setup script.
 
-```bash
-./setup-repositories.sh
-## Optional Flags
-# ./setup-repositories.sh -c ../config.sh -p ssh
-# ./setup-repositories.sh -c ../local-config.sh -p ssh
-# ./setup-repositories.sh -c ../config.sh -p https
+    ```bash
+    ./setup-repositories.sh
+    ## Optional Flags
+    # ./setup-repositories.sh -c ../config.sh -p ssh
+    # ./setup-repositories.sh -c ../local-config.sh -p ssh
+    # ./setup-repositories.sh -c ../config.sh -p https
 
-```
+    ```
 
 4.  Optional - If you did not initially use `~/vulcanize`, move the `stack-orchestrator` directory to `~/vulcanize`.
 
@@ -83,28 +83,38 @@ cd stack-orchestrator/helper-scripts
 
     ```
 
-6.  Build the entire stack. Remove lines for the parts of the stack you don’t want to build.
+6.  Build the entire stack.
 
-```bash
-./wrapper.sh -e docker \
-  -d ../docker/latest/docker-compose-db.yml \
-  -d ../docker/local/docker-compose-ipld-eth-server.yml \
-  -d ../docker/latest/docker-compose-lighthouse.yml \
-  -d ../docker/local/docker-compose-ipld-eth-beacon-indexer.yml \
-  -d ../docker/local/docker-compose-go-ethereum.yml \
-  -v remove \
-  -p ../config.sh
+    - For building part of the stack.
+      ```bash
+      ./wrapper.sh -e docker \
+        -d ../docker/latest/docker-compose-db.yml \
+        -d ../docker/local/docker-compose-ipld-eth-server.yml \
+        -d ../docker/latest/docker-compose-lighthouse.yml \
+        -d ../docker/local/docker-compose-ipld-eth-beacon-indexer.yml \
+        -d ../docker/local/docker-compose-go-ethereum.yml \
+        -v remove \
+        -p ../config.sh
 
-```
+      ```
+      Remove lines for the parts of the stack you don’t want to build.
 
-or
+    - For building full stack with specified DB version (v3 or v4)
+      ```bash
+      ./wrapper.sh -f true \
+        -s v4 \
+        -l latest \
+        -p ../config.sh
+      ```
 
-```bash
-./wrapper.sh -f true \
-  -s v3 \
-  -l latest \
-  -p ../config.sh
-```
+    - For building stack with auto mining of blocks
+      ```bash
+      ./wrapper.sh -f true \
+        -m true \
+        -s v4 \
+        -l latest \
+        -p ../config.sh
+      ```
 
 7.  When you want to clean up your local environment, hit `ctrl + c`. The bash script will remove all containers and any volumes created (if you specify `v remove`).
 

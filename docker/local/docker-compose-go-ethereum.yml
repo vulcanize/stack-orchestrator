@@ -9,6 +9,8 @@ services:
     build:
       context: ../../
       dockerfile: ./docker/local/go-ethereum.Dockerfile
+      args:
+        GENESIS_FILE_PATH: ${genesis_file_path}
     healthcheck:
       test: ["CMD", "nc", "-v", "localhost", "8545"]
       interval: 10s

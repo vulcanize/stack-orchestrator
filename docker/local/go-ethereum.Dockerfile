@@ -4,10 +4,12 @@ RUN apk update ; apk add --no-cache --allow-untrusted ca-certificates curl bash 
 RUN apk add --no-cache --upgrade grep
 WORKDIR /root
 
+ARG GENESIS_FILE_PATH=start-up-files/go-ethereum/genesis.json
+
 COPY stateful ./stateful
 ADD start-up-files/go-ethereum/start-private-network.sh .
 ADD start-up-files/go-ethereum/deploy-local-network.sh .
-ADD start-up-files/go-ethereum/genesis.json .
+ADD $GENESIS_FILE_PATH ./genesis.json
 ADD helper-scripts/geth-linux-amd64 /bin/geth
 
 RUN chmod +x /bin/geth
