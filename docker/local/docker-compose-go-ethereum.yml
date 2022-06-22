@@ -13,7 +13,7 @@ services:
         GENESIS_FILE_PATH: ${genesis_file_path}
     healthcheck:
       test: ["CMD", "nc", "-v", "localhost", "8545"]
-      interval: 10s
+      interval: 30s
       timeout: 3s
       retries: 5
     environment:
