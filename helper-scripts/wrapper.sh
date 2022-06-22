@@ -107,8 +107,8 @@ echo -e "${GREEN} p=${p} ${NC}"
 
 if [ "$f" == "true" ]; then
     e="docker"
-latestPath="../docker/latest"
-localPath="../docker/local"
+    latestPath="../docker/latest"
+    localPath="../docker/local"
     if [ "$l" == "local" ]; then
         composeFiles=("${latestPath}/docker-compose-lighthouse.yml"
                       "${localPath}/docker-compose-ipld-eth-beacon-db.yml"
@@ -153,7 +153,7 @@ echo -e "${GREEN} Sourcing: $p ${nc}"
 source $p
 
 if [ "$m" == "true" ]; then
-    export genesis_file_path='start-up-files/go-ethereum/auto-genesis.json'
+    export genesis_file_path='start-up-files/go-ethereum/genesis-automine.json'
 fi
 
 fileArgs=()
