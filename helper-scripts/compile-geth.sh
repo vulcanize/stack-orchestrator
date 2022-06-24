@@ -77,7 +77,7 @@ fi
 
 if [[ "$e" = "docker" ]] ; then
     echo -e "${GREEN}Building geth using docker!${NC}"
-    docker build -t vulcanize/go-ethereum -f Dockerfile .
+    docker build --platform linux/arm64 -t vulcanize/go-ethereum -f Dockerfile .
     docker run --rm --entrypoint cat vulcanize/go-ethereum /usr/local/bin/geth > ./geth-linux-amd64
     chmod +x ./geth-linux-amd64
     mv ./geth-linux-amd64 ${start_path}/geth-linux-amd64
