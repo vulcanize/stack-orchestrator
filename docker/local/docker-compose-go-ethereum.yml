@@ -15,7 +15,7 @@ services:
       test: ["CMD", "nc", "-v", "localhost", "8545"]
       interval: 30s
       timeout: 3s
-      retries: 5
+      retries: 10
     environment:
       DB_USER: vdbm
       DB_NAME: vulcanize_testing
