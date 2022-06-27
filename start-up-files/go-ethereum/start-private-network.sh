@@ -11,9 +11,12 @@ mkdir -p $ETHDIR
 /bin/bash deploy-local-network.sh --rpc-addr 0.0.0.0 --db-user $DB_USER --db-password $DB_PASSWORD --db-name $DB_NAME \
   --db-host $DB_HOST --db-port $DB_PORT --db-write $DB_WRITE --dir "$ETHDIR" --address $ADDRESS \
   --db-type $DB_TYPE --db-driver $DB_DRIVER --db-waitforsync $DB_WAIT_FOR_SYNC --chain-id $CHAIN_ID --extra-args "$EXTRA_START_ARGS" &
-echo "sleeping 30 sec"
+
 # give it a few secs to start up
-sleep 30
+COUNT=0
+ATTEMPTS=15
+until $(nc -v localhost 8545) || [[ $COUNT -eq $ATTEMPTS ]]; do echo -e "$(( COUNT++ ))... \c"; sleep 10; done
+[[ $COUNT -eq $ATTEMPTS ]] && echo "Could not connect to localhost 8545" && (exit 1)
 
 # Run tests
 cd stateful

@@ -86,6 +86,7 @@ If you want to quickly get all the applications mentioned above cloned and runni
 6.  Build the entire stack.
 
     - For building part of the stack.
+
       ```bash
       ./wrapper.sh -e docker \
         -d ../docker/latest/docker-compose-db.yml \
@@ -97,9 +98,11 @@ If you want to quickly get all the applications mentioned above cloned and runni
         -p ../config.sh
 
       ```
+
       Remove lines for the parts of the stack you don’t want to build.
 
     - For building full stack with specified DB version (v3 or v4)
+
       ```bash
       ./wrapper.sh -f true \
         -s v4 \
@@ -202,4 +205,35 @@ Users might notice issues when attempting to build `ipld-eth-server`. If you are
 
 ```
 sudo su -c "setenforce 0"
+```
+
+## GETH Issues With M1 Macs
+
+Users might notice issues when attempting to build `go-ethereum` on M1 Macs. If this happens, you will either need to manually install `geth` in your `helper-scripts` directory OR run `./wrapper.sh` using the `-e remote` flag to build the stack on a remote server:
+
+### Manually Installing GETH
+
+```
+cd helper-scripts
+wget https://github.com/vulcanize/go-ethereum/releases/download/v1.10.19-statediff-4.0.3-alpha/geth-linux-amd64
+```
+
+Then rename it using:
+
+```
+mv geth-linux-amd64.1 geth-linux-amd64
+```
+
+### Building the Stack on a Remote Server
+
+```
+./wrapper.sh \
+  -e remote \
+  -u <USERNAME> \
+  -n <HOSTNAME> \
+  -d "../docker/latest/docker-compose-db-sharding.yml" \
+  -d "../docker/local/docker-compose-go-ethereum.yml" \
+  -d "../docker/local/docker-compose-contract.yml" \
+  -v remove \
+  -p ../config.sh
 ```

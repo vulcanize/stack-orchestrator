@@ -36,7 +36,7 @@ exit 1
 # EOF is found above and hence cat command stops reading. This is equivalent to echo but much neater when printing out.
 }
 
-e="local"
+e="docker"
 v="keep"
 u="abdul"
 n="alabaster.vdb.to"
@@ -106,7 +106,6 @@ echo -e "${GREEN} p=${p} ${NC}"
 echo -e "${GREEN} p=${p} ${NC}"
 
 if [ "$f" == "true" ]; then
-    e="docker"
     latestPath="../docker/latest"
     localPath="../docker/local"
     if [ "$l" == "local" ]; then
