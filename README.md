@@ -40,34 +40,34 @@ If you want to quickly get all the applications mentioned above cloned and runni
 
 1.  Clone the stack-orchestrator repository.
 
-```bash
-# It is recommended that you utilize the directory below.
-mkdir -p ~/vulcanize
-cd ~/vulcanize
-git clone git@github.com:vulcanize/stack-orchestrator.git
+    ```bash
+    # It is recommended that you utilize the directory below.
+    mkdir -p ~/vulcanize
+    cd ~/vulcanize
+    git clone git@github.com:vulcanize/stack-orchestrator.git
 
-```
+    ```
 
 2.  Create a `config.sh` file.
 
-```bash
-cd stack-orchestrator/helper-scripts
-./create-config.sh
-## Optional flags
-# ./create-config.sh -b ~/GitHub/cerc -p ../local-config.sh
+    ```bash
+    cd stack-orchestrator/helper-scripts
+    ./create-config.sh
+    ## Optional flags
+    # ./create-config.sh -b ~/GitHub/cerc -p ../local-config.sh
 
-```
+    ```
 
 3.  Run the setup script.
 
-```bash
-./setup-repositories.sh
-## Optional Flags
-# ./setup-repositories.sh -c ../config.sh -p ssh
-# ./setup-repositories.sh -c ../local-config.sh -p ssh
-# ./setup-repositories.sh -c ../config.sh -p https
+    ```bash
+    ./setup-repositories.sh
+    ## Optional Flags
+    # ./setup-repositories.sh -c ../config.sh -p ssh
+    # ./setup-repositories.sh -c ../local-config.sh -p ssh
+    # ./setup-repositories.sh -c ../config.sh -p https
 
-```
+    ```
 
 4.  Optional - If you did not initially use `~/vulcanize`, move the `stack-orchestrator` directory to `~/vulcanize`.
 
@@ -83,30 +83,55 @@ cd stack-orchestrator/helper-scripts
 
     ```
 
-6.  Build the entire stack. Remove lines for the parts of the stack you don’t want to build.
+6.  Checkout certain repositories to their desired branches:
+    At a minimum perform the following (the branches below might be outdated, if you suspect they are, reach out to a core developer).
 
 ```bash
-./wrapper.sh -e docker \
-  -d ../docker/latest/docker-compose-db.yml \
-  -d ../docker/local/docker-compose-ipld-eth-server.yml \
-  -d ../docker/latest/docker-compose-lighthouse.yml \
-  -d ../docker/local/docker-compose-ipld-eth-beacon-indexer.yml \
-  -d ../docker/local/docker-compose-go-ethereum.yml \
-  -v remove \
-  -p ../config.sh
-
+source config.sh
+cd $vulcanize_test_contract ; git checkout sharding ; cd -
+cd $vulcanize_eth_statediff_fill_service ; git checkout sharding; cd -
+cd $vulcanize_go_ethereum ; git checkout v1.10.19-statediff-v4 ; cd -
 ```
 
-or
+If you plan on doing local development, figure out a combination that works for you!
 
-```bash
-./wrapper.sh -f true \
-  -s v3 \
-  -l latest \
-  -p ../config.sh
-```
+7.  Build the entire stack. The `wrapper.sh` script does all the heavy lifting. You can specify various flags and configurations to it (its helpful to run the script with the `-h` flag to see your options). Ultimately, you can string together various docker-compose files and spin up all the applications at once, or you can use certain shortcuts to build the entire stack.
 
-7.  When you want to clean up your local environment, hit `ctrl + c`. The bash script will remove all containers and any volumes created (if you specify `v remove`).
+    - For building part of the stack.
+
+      ```bash
+      ./wrapper.sh -e docker \
+        -d ../docker/latest/docker-compose-db-sharding.yml \
+        -d ../docker/local/docker-compose-ipld-eth-server.yml \
+        -d ../docker/latest/docker-compose-lighthouse.yml \
+        -d ../docker/local/docker-compose-ipld-eth-beacon-indexer.yml \
+        -d ../docker/local/docker-compose-go-ethereum.yml \
+        -v remove \
+        -p ../config.sh
+
+      ```
+
+      Remove lines for the parts of the stack you don’t want to build.
+
+    - For building full stack with specified DB version (v3 or v4)
+
+      ```bash
+      ./wrapper.sh -f true \
+        -s v4 \
+        -l latest \
+        -p ../config.sh
+      ```
+
+    - For building stack with auto mining of blocks
+      ```bash
+      ./wrapper.sh -f true \
+        -m true \
+        -s v4 \
+        -l latest \
+        -p ../config.sh
+      ```
+
+8.  When you want to clean up your local environment, hit `ctrl + c`. The bash script will remove all containers and any volumes created (if you specify `v remove`).
 
 ## Components
 
@@ -192,4 +217,35 @@ Users might notice issues when attempting to build `ipld-eth-server`. If you are
 
 ```
 sudo su -c "setenforce 0"
+```
+
+## GETH Issues With M1 Macs
+
+Users might notice issues when attempting to build `go-ethereum` on M1 Macs. If this happens, you will either need to manually install `geth` in your `helper-scripts` directory OR run `./wrapper.sh` using the `-e remote` flag to build the stack on a remote server:
+
+### Manually Installing GETH
+
+```
+cd helper-scripts
+wget https://github.com/vulcanize/go-ethereum/releases/download/v1.10.19-statediff-4.0.3-alpha/geth-linux-amd64
+```
+
+Then rename it using:
+
+```
+mv geth-linux-amd64.1 geth-linux-amd64
+```
+
+### Building the Stack on a Remote Server
+
+```
+./wrapper.sh \
+  -e remote \
+  -u <USERNAME> \
+  -n <HOSTNAME> \
+  -d "../docker/latest/docker-compose-db-sharding.yml" \
+  -d "../docker/local/docker-compose-go-ethereum.yml" \
+  -d "../docker/local/docker-compose-contract.yml" \
+  -v remove \
+  -p ../config.sh
 ```

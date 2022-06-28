@@ -25,9 +25,9 @@ services:
       POSTGRES_PASSWORD: "password"
     healthcheck:
       test: ["CMD", "nc", "-v", "localhost", "5432"]
-      interval: 5s
-      timeout: 3s
-      retries: 5
+      interval: 10s
+      timeout: 10s
+      retries: 10
       start_period: 3s
     ports:
       - "127.0.0.1:8077:5432"

@@ -27,6 +27,8 @@ Spin up Foundry with Geth and a database.
 
 -s          If we are building the full stack, specify the DB version youd like: "v3" or "v4".
 
+-m          Should mining of blocks be done in intervals? "true" or "false"
+
 -p,         Path to config.sh file.
 
 EOF
@@ -34,7 +36,7 @@ exit 1
 # EOF is found above and hence cat command stops reading. This is equivalent to echo but much neater when printing out.
 }
 
-e="local"
+e="docker"
 v="keep"
 u="abdul"
 n="alabaster.vdb.to"
@@ -42,10 +44,11 @@ p="../config.sh"
 f="false"
 l="remote"
 s="v3"
+m="false"
 GREEN='\033[0;32m'
 RED='\033[0;31m'
 NC='\033[0m'
-while getopts ":e:d:v:u:n:p:f:l:s:" o; do
+while getopts ":e:d:v:u:n:p:f:l:s:m:" o; do
     case "${o}" in
         e)
             e=${OPTARG}
@@ -80,6 +83,10 @@ while getopts ":e:d:v:u:n:p:f:l:s:" o; do
             l=${OPTARG}
             [ "$l" = "local" -o "$l" = "latest" ] || showHelp
             ;;
+        m)
+            m=${OPTARG}
+            [ "$m" = "true" -o "$m" = "false" ] || showHelp
+            ;;
         *)
             showHelp
             ;;
@@ -99,7 +106,6 @@ echo -e "${GREEN} p=${p} ${NC}"
 echo -e "${GREEN} p=${p} ${NC}"
 
 if [ "$f" == "true" ]; then
-    e="docker"
     latestPath="../docker/latest"
     localPath="../docker/local"
     if [ "$l" == "local" ]; then
@@ -144,6 +150,10 @@ fi
 
 echo -e "${GREEN} Sourcing: $p ${nc}"
 source $p
+
+if [ "$m" == "true" ]; then
+    export genesis_file_path='start-up-files/go-ethereum/genesis-automine.json'
+fi
 
 fileArgs=()
 for files in "${composeFiles[@]}"; do fileArgs+=(-f "$files"); done
