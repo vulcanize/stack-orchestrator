@@ -83,13 +83,25 @@ If you want to quickly get all the applications mentioned above cloned and runni
 
     ```
 
-6.  Build the entire stack.
+6.  Checkout certain repositories to their desired branches:
+    At a minimum perform the following (the branches below might be outdated, if you suspect they are, reach out to a core developer).
+
+```bash
+source config.sh
+cd $vulcanize_test_contract ; git checkout sharding ; cd -
+cd $vulcanize_eth_statediff_fill_service ; git checkout sharding; cd -
+cd $vulcanize_go_ethereum ; git checkout v1.10.19-statediff-v4 ; cd -
+```
+
+If you plan on doing local development, figure out a combination that works for you!
+
+7.  Build the entire stack. The `wrapper.sh` script does all the heavy lifting. You can specify various flags and configurations to it (its helpful to run the script with the `-h` flag to see your options). Ultimately, you can string together various docker-compose files and spin up all the applications at once, or you can use certain shortcuts to build the entire stack.
 
     - For building part of the stack.
 
       ```bash
       ./wrapper.sh -e docker \
-        -d ../docker/latest/docker-compose-db.yml \
+        -d ../docker/latest/docker-compose-db-sharding.yml \
         -d ../docker/local/docker-compose-ipld-eth-server.yml \
         -d ../docker/latest/docker-compose-lighthouse.yml \
         -d ../docker/local/docker-compose-ipld-eth-beacon-indexer.yml \
@@ -119,7 +131,7 @@ If you want to quickly get all the applications mentioned above cloned and runni
         -p ../config.sh
       ```
 
-7.  When you want to clean up your local environment, hit `ctrl + c`. The bash script will remove all containers and any volumes created (if you specify `v remove`).
+8.  When you want to clean up your local environment, hit `ctrl + c`. The bash script will remove all containers and any volumes created (if you specify `v remove`).
 
 ## Components
 

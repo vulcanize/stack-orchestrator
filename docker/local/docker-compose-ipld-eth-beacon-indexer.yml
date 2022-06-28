@@ -14,3 +14,6 @@ services:
       - type: bind
         source: ${eth_beacon_config_file}
         target: /root/ipld-eth-beacon-config.json
+    ports:
+      - "9200:9200"
+      - "6060:6060"
