@@ -1,0 +1,5 @@
+#!/bin/bash
+
+docker-compose-v1 --env-file "../config.sh" --file "docker-compose-lighthouse.yml" --file "docker-compose-ipld-eth-beacon-db.yml" --file "docker-compose-ipld-eth-beacon-indexer.yml" --file "docker-compose-ipld-eth-server.yml" --file "docker-compose-eth-statediff-fill-service.yml" --file "docker-compose-go-ethereum.yml" --file "docker-compose-contract.yml" --file "docker-compose-db-sharding.yml" --project-name "latest" --project-directory "$HOME/vulcanize/stack-orchestrator/docker/latest" -v down
+
+docker-compose-v1 --env-file "../config.sh" --file "docker-compose-lighthouse.yml" --file "docker-compose-ipld-eth-beacon-db.yml" --file "docker-compose-ipld-eth-beacon-indexer.yml" --file "docker-compose-ipld-eth-server.yml" --file "docker-compose-eth-statediff-fill-service.yml" --file "docker-compose-go-ethereum.yml" --file "docker-compose-contract.yml" --file "docker-compose-db-sharding.yml" --project-name "latest" --project-directory "$HOME/vulcanize/stack-orchestrator/docker/local" -v down
