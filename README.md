@@ -1,3 +1,7 @@
+# DEPRECATION NOTICE
+This repo has been moved to https://github.com/cerc-io/stack-orchestrator
+
+# Contents
 - [Overview](#overview)
 - [Building The Stack](#building-the-stack)
   - [Quick Start](#quick-start)
