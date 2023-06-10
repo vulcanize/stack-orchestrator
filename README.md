@@ -1,5 +1,5 @@
 # DEPRECATION NOTICE
-This repo has been moved to https://github.com/cerc-io/stack-orchestrator
+This repo has been superseded by https://github.com/cerc-io/stack-orchestrator
 
 # Contents
 - [Overview](#overview)
